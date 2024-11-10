@@ -1,4 +1,4 @@
-
+﻿
 
 
 using UnityEngine.UI;
@@ -14,7 +14,7 @@ public class VillainUI : MonoBehaviour, IPointerDownHandler {
     public TextMeshProUGUI abilityCost;
     private GameState gameState;
 
-    public void Init (Villain data, GameState state) {
+    public void Init(Villain data, GameState state) {
 
         this.data = data;
         artworkHolder.sprite = data.artwork;
@@ -22,7 +22,7 @@ public class VillainUI : MonoBehaviour, IPointerDownHandler {
         this.gameState = state;
     }
 
-    public void OnPointerDown (PointerEventData eventData) {
+    public void OnPointerDown(PointerEventData eventData) {
 
         var changeData = GameStateChangeData.New(this.gameState);
         changeData.villain = this.data;
