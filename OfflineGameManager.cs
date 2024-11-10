@@ -17,7 +17,9 @@ using UnityEngine.SceneManagement;
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
-    public bool gameInitialized;
+    private bool gameInitialized;
+    public bool useLocalAssets;
+
     public List<Player> playerList = new();
 
     public CardDeck testDeck1;
