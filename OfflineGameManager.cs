@@ -1,0 +1,280 @@
+﻿
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+[RequireComponent(typeof(IPreLoader))]
+[RequireComponent(typeof(CardViewManager))]
+[RequireComponent(typeof(IInputManager))]
+[RequireComponent(typeof(ITurnManager))]
+[RequireComponent(typeof(IEffectManager))]
+[RequireComponent(typeof(IUIManager))]
+[RequireComponent(typeof(IVillainAbilityManager))]
+
+public class OfflineGameManager : MonoBehaviour, IMediator {
+
+    public bool gameInitialized;
+    public List<Player> playerList = new();
+
+    public CardDeck testDeck1;
+    public CardDeck testDeck2;
+
+    List<CardRuntimeData> runtimeDeck1;
+    List<CardRuntimeData> runtimeDeck2;
+
+    Player currentPlayer;
+    Player nonCurrentPlayer;
+
+    CardViewManager cardViewManager;
+
+    internal GameState gameState;
+    internal IInputManager inputManager;
+    internal ITurnManager turnManager;
+    internal IEffectManager effectManager;
+    internal IUIManager uiManager;
+    internal IVillainAbilityManager villainAbilityManager;
+    internal IPreLoader preLoader;
+
+    public event Action<GameState> OnStartOfTurn;
+    public event Action<GameState> OnEndOfTurn;
+    public event Action<GameState> OnGameStateChanged;
+
+    public event Action<GameState, CardView3D> OnCardPlayedFromHand;
+    public event Action<GameState, CardView3D> OnCardReturnedToHand;
+    public event Action<GameState, CardRuntimeData, int> OnPlayerDrawCard;
+    public event Action<GameState, CardPool> OnFindEffectTriggered;
+    public event Action<GameState, CardRuntimeData> OnCardInFindWindowSelected;
+    public event Action<GameState, Villain> OnVillainAbilityClicked;
+
+    void Awake () {
+
+        inputManager = GetComponent<IInputManager>();
+        turnManager = GetComponent<ITurnManager>();
+        effectManager = GetComponent<IEffectManager>();
+        cardViewManager = GetComponent<CardViewManager>();
+        uiManager = GetComponent<IUIManager>();
+        villainAbilityManager = GetComponent<IVillainAbilityManager>();
+        preLoader = GetComponent<IPreLoader>();
+    }
+
+    private void Start () {
+
+        runtimeDeck1 = new List<CardRuntimeData>(testDeck1.cards);
+        runtimeDeck2 = new List<CardRuntimeData>(testDeck2.cards);
+
+        inputManager.ON_LeftClickedCardView += Handler_LeftClickedCardView;
+        inputManager.ON_RightClickedCardView += Handler_RightClickedCardView;
+
+        turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
+        turnManager.OnEndOfTurn += Handler_OnEndOfTurn;
+        turnManager.OnCardDraw += Handler_OnCardDraw;
+
+        cardViewManager.OnCardMovedToPlayZone += Handler_OnCardViewMovedToPlayZone;
+
+        villainAbilityManager.OnVillainAbilityHandled += Handler_OnVillainAbilityHandled;
+
+    }
+    public GameState GetGameState () {
+        return this.gameState;
+    }
+    public void StartGame () {
+
+        if (gameInitialized) return;
+
+        preLoader.Run(PreLoaderAction.LoadAllCreatures);
+
+        for (int i = 0; i < playerList.Count; i++) {
+            if ((i + 1) == 1) {
+                playerList[i].Init(i + 1, runtimeDeck1, testDeck1.villain);
+            }
+            else playerList[i].Init(i+1, runtimeDeck2, testDeck2.villain);
+        }
+
+        this.turnManager.Init(playerList);
+        this.villainAbilityManager.Init(this);
+        this.gameState = new GameState(this.turnManager);
+        this.gameState.OnChanged += HandleInternalGameStateChange;
+        this.uiManager.CreateVillains(this.gameState);
+
+        this.turnManager.DrawStartHand();
+        gameInitialized = true;
+        Invoke_GameStateChanged();
+    }
+
+    // BUTTONS
+    public void EndPlayerTurn () {
+
+        turnManager.EndTurn();
+    }
+    public void DrawForActivePlayer () {
+
+        CardRuntimeData data = turnManager.ActivePlayer.DrawCard();
+        Invoke_GameStateChanged();
+        Invoke_OnPlayerDrawCard(data, turnManager.ActivePlayer.ID);
+    }
+    public void DiscardRandomCard () {
+
+        if (currentPlayer.cards.HandSize == 0) return;
+        CardRuntimeData randomCard = currentPlayer.cards.GetRandomCardInHand();
+        currentPlayer.cards.MoveCardBetweenZones(randomCard, CardZone.Hand, CardZone.Graveyard);
+        Invoke_GameStateChanged();
+
+
+    }
+    public void PlayRandomCardFromHand () {
+
+        if (currentPlayer.cards.HandSize == 0) return;
+        CardRuntimeData card = currentPlayer.cards.GetRandomCardInHand();
+        currentPlayer.cards.MoveCardBetweenZones(card, CardZone.Hand, CardZone.Play);
+
+        if (card is CreatureRuntimeData) {
+
+            CreatureRuntimeData creature = card as CreatureRuntimeData;
+
+            foreach (var effect in creature.effects) {
+                foreach (var trigger in effect.triggers) {
+                    if (trigger == EffectTrigger.Play) {
+                        effect.Apply(GetGameState());
+                    }
+                }
+            }
+
+            Debug.Log("Played a creature!");
+        }
+
+        if (card is SpellRuntimeData) {
+
+            SpellRuntimeData spell = card as SpellRuntimeData;
+            Debug.Log("Played a spell!");
+        }
+
+        Invoke_GameStateChanged();
+    }
+    public void MaxMana() {
+
+        foreach (var player in playerList) {
+            player.resources.currentMana = player.resources.maxMana;
+        }
+
+        Invoke_GameStateChanged();
+    }
+
+    // INVOKE EVENTS
+    public void Invoke_GameStateChanged () {
+
+        OnGameStateChanged?.Invoke(this.gameState);
+    }
+    public void Invoke_OnPlayerDrawCard (CardRuntimeData data, int playerID) {
+        OnPlayerDrawCard?.Invoke(GetGameState(), data, playerID);
+    }
+    public void Invoke_OnCardPlayedFromHand (CardView3D cardView) {
+
+        OnCardPlayedFromHand?.Invoke(GetGameState(), cardView);
+    }
+    public void Invoke_ReturnCardFromBoardToHand(CardView3D cardView) {
+
+        OnCardReturnedToHand?.Invoke(GetGameState(), cardView);
+    }
+    public void Invoke_OnFindEffectTriggered (CardPool pool) {
+
+        OnFindEffectTriggered?.Invoke(GetGameState(), pool);
+    }
+    public void Invoke_OnCardInFindWindowSelected (CardRuntimeData data) {
+
+        OnCardInFindWindowSelected?.Invoke(GetGameState(), data);
+    }
+    public void Invoke_OnVillainAbilityClicked (Villain villain) {
+        OnVillainAbilityClicked?.Invoke(GetGameState(), villain);
+    }
+    public void Invoke_OnStartOfTurn () {
+
+        OnStartOfTurn?.Invoke(GetGameState());
+    }
+    public void Invoke_OnEndOfTurn() {
+        OnEndOfTurn?.Invoke(GetGameState());
+    }
+
+    // EVENT HANDLER
+    public void Handler_LeftClickedCardView (CardView3D cardView) {
+
+        cardView.Interact(GetGameState(), InputAction.LeftMouse);
+    }
+    public void Handler_RightClickedCardView (CardView3D cardView) {
+
+        cardView.Interact(GetGameState(), InputAction.RightMouse);
+        return;
+
+        /*
+        if (cardView.viewPosition == CardZone.Hand) return;
+        CardZone from = CardZone.Play;
+        CardZone to = CardZone.Hand;
+        currentPlayer.cards.MoveCardBetweenZones(cardView.data, from, to);
+        cardView.SetZone(CardZone.Hand);
+        Invoke_GameStateChanged();
+        Invoke_OnCardReturnedToHand(cardView);
+        */
+    }
+
+    // HANDLER - TurnManager
+    public void Handler_OnStartOfTurn () {
+        Invoke_OnStartOfTurn();
+    }
+    public void Handler_OnEndOfTurn() {
+        Invoke_OnEndOfTurn();
+    }
+    public void Handler_OnCardDraw (CardRuntimeData cardRuntimeData, int id) {
+        Invoke_OnPlayerDrawCard(cardRuntimeData, id);
+    }
+    public void Handler_OnCardViewMovedToPlayZone (GameState state, CardView3D cardView) {
+
+        if (!cardView.data.HasEffect()) return;
+        effectManager.Handle(cardView.data);
+    }
+
+    // HANDLER - VillainAbilityManager
+    public void Handler_OnVillainAbilityHandled () {
+        Invoke_GameStateChanged();
+    }
+
+    // GameState
+    public void HandleInternalGameStateChange (GameStateChangeReason change, GameStateChangeData data) {
+
+        switch (change) {
+
+            case GameStateChangeReason.Action_PlayedCardFromHand:
+                Invoke_OnCardPlayedFromHand(data.affectedView);
+                break;
+
+            case GameStateChangeReason.Action_ReturnedCardFromBoardToHand:
+                Invoke_ReturnCardFromBoardToHand(data.affectedView);
+                break;
+
+            case GameStateChangeReason.EffectActivated_FindCards:
+                Invoke_OnFindEffectTriggered(data.cardPool);
+                break;
+
+            case GameStateChangeReason.Input_ClickedOnCardInFindWindow:
+                Invoke_OnCardInFindWindowSelected(data.cardData);
+                break;
+
+            case GameStateChangeReason.Input_ClickedOnVillainAbility:
+                Invoke_OnVillainAbilityClicked(data.villain);
+                break;
+        }
+
+        Invoke_GameStateChanged();
+    }
+
+    // UTILITY
+    public void ResetScene () {
+        SceneManager.LoadScene(0);
+    }
+    public bool CardIsPlayable (CardRuntimeData data) {
+
+        return currentPlayer.resources.currentMana >= data.cardCost;
+    }
+}
