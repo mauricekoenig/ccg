@@ -31,12 +31,12 @@ public class Player : MonoBehaviour {
         resources = GetComponent<PlayerResources>();
     }
 
-    public void Init (int id, List<CardRuntimeData> deckList, Villain villain) {
+    public void Init (int id, ICardDeck deck, Villain villain) {
 
         this.id = id;
         this.health = 20;
         this.villain = villain; 
-        cards.Init(deckList);
+        cards.Init(deck);
         resources.Init(this);
     }
 
@@ -47,12 +47,12 @@ public class Player : MonoBehaviour {
         this.resources.Remove(amount);
     }
 
-    public void AddCardToBoard (CardRuntimeData data) {
+    public void AddCardToBoard (RuntimeCardData data) {
 
         cards.AddCardToZone(data, CardZone.Play);
     }
 
-    public CardRuntimeData DrawCard () {
+    public RuntimeCardData DrawCard () {
 
         if (cards.Deck.Count <= 0) return null;
         return cards.DrawCardFromDeck();

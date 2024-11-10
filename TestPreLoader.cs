@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -22,19 +23,19 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
         this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
     }
 
-    public void Run (PreLoaderAction action) {
+    public async Task Run (PreLoaderAction action) {
 
         switch (action) {
 
             case PreLoaderAction.LoadAllCreatures:
-                databaseService.SelectAllCreatures();
+                await databaseService.SelectAllCreatures();
                 break;
         }
     }
-    public void Handler_OnSelectAllCreatures(HashSet<CreatureData> data) {
+
+    public void Handler_OnSelectAllCreatures(HashSet<CreatureRuntimeCardData> data) {
 
         gameData.AssignCreatures(data);
-        Debug.Log("LOADED CREATURES");
     }
 
 }

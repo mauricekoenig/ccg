@@ -6,7 +6,7 @@ public class GameStateChangeData {
     public GameState state;
     public CardView3D affectedView;
     public CardPool cardPool;
-    public CardRuntimeData cardData;
+    public RuntimeCardData cardData;
     public Villain villain;
 
     public GameStateChangeData (GameState state) {

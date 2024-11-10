@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour, IUIManager {
         mediator.OnCardInFindWindowSelected += Handle_OnCardInFindWindowSelected;
     }
 
-    private void Handle_OnCardInFindWindowSelected(GameState state, CardRuntimeData data) {
+    private void Handle_OnCardInFindWindowSelected(GameState state, RuntimeCardData data) {
 
         ToggleWindow(findWindow);
     }
@@ -101,7 +101,7 @@ public class UIManager : MonoBehaviour, IUIManager {
 
     public void Handle_FindEffectTriggered (GameState state, CardPool pool) {
 
-        Utils.Shuffle<CardRuntimeData>(pool.cards);
+        Utils.Shuffle<RuntimeCardData>(pool.cards);
 
         foreach (Transform t in findWindowParent) {
             Destroy(t.gameObject);

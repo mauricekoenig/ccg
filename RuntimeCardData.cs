@@ -5,7 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class BaseCardData {
+public abstract class RuntimeCardData {
 
     public int Id { get; set; }
     public string Name { get; set; }
@@ -20,15 +20,16 @@ public abstract class BaseCardData {
         return Effects.Count > 0;
     }
 
-    public BaseCardData (int id, string name, int cost, string artworkBase64) {
+    public RuntimeCardData (int id, string name, int cost, string artworkBase64) {
 
         Id = id;
         Name = name;
         Cost = cost;
         ArtworkBase64 = artworkBase64;
+        Effects = new HashSet<BaseEffect>();
     }
 
-    public BaseCardData (int id, string name, int cost, Sprite artwork, CardRarity rarity, HashSet<BaseEffect> effects) {
+    public RuntimeCardData (int id, string name, int cost, Sprite artwork, CardRarity rarity, HashSet<BaseEffect> effects) {
 
         Id = id;
         Name = name;

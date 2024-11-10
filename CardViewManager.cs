@@ -49,7 +49,7 @@ public class CardViewManager : MonoBehaviour {
 
         OnCardMovedToPlayZone?.Invoke(state, cardView);
     }
-    private void Handler_OnCardInFindWindowSelected (GameState state, CardRuntimeData data) {
+    private void Handler_OnCardInFindWindowSelected (GameState state, RuntimeCardData data) {
 
         CardViewOwner owner = state.ActivePlayer.ID == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
         Transform cardHolder = state.ActivePlayer.ID == 1 ? handView1 : handView2;
@@ -67,7 +67,7 @@ public class CardViewManager : MonoBehaviour {
         UpdateHand(state.ActivePlayer.ID);
         UpdateBoard(state.ActivePlayer.ID);
     }
-    public void EventHandler_OnPlayerDrawCard(GameState state, CardRuntimeData data, int playerID) {
+    public void EventHandler_OnPlayerDrawCard(GameState state, RuntimeCardData data, int playerID) {
 
         int id = playerID;
         Transform hand = id == 1 ? handView1 : handView2;
@@ -140,7 +140,7 @@ public class CardViewManager : MonoBehaviour {
         }
     }
 
-    public CardView3D CreateCardView (CardRuntimeData cardRuntimeData, CardViewOwner owner, Transform parent) {
+    public CardView3D CreateCardView (RuntimeCardData cardRuntimeData, CardViewOwner owner, Transform parent) {
         return Instantiate(cardViewPrefab, Vector3.zero, GetCardRotation(owner), parent).GetComponent<CardView3D>();
     }
 

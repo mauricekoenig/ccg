@@ -7,7 +7,7 @@ using UnityEngine;
 public class VillainAbility_SummonCreature : BaseVillainAbility {
 
     public int howMany;
-    public CardRuntimeData creatureData;
+    public RuntimeCardData creatureData;
 
     public override void Apply (GameState state) {
         

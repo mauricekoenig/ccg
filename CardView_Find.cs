@@ -7,14 +7,14 @@ using UnityEngine.UI;
 public class CardView_Find : MonoBehaviour, IPointerDownHandler
 {
     private GameState gameState;
-    private CardRuntimeData cardRuntimeData;
+    private RuntimeCardData cardRuntimeData;
     [SerializeField] private Image artwork;
 
-    public void Init (CardRuntimeData data, GameState state) {
+    public void Init (RuntimeCardData data, GameState state) {
 
         this.gameState = state;
         cardRuntimeData = data;
-        artwork.sprite = data.artwork;
+        artwork.sprite = data.Artwork;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
