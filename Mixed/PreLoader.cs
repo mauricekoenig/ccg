@@ -17,19 +17,17 @@ public class PreLoader : MonoBehaviour, IPreLoader {
     private void Awake() {
         
         databaseService = GetComponent<IDataBaseService>();
-        this.gameData.Init();
-    }
-    private void Start() {
-
+        if (RuntimeGameData.Initialized) return;
+        this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
         this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
     }
 
-    public async Task Run (PreLoaderAction action) {
+    public void Run (PreLoaderAction action) {
 
         switch (action) {
 
             case PreLoaderAction.LoadAllCreatures:
-                await databaseService.SelectAllCreatures();
+                databaseService.SelectAllCreatures();
                 break;
 
             case PreLoaderAction.LoadAllEffects:

@@ -7,13 +7,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(IPreLoader))]
 [RequireComponent(typeof(CardViewManager))]
-[RequireComponent(typeof(IInputManager))]
-[RequireComponent(typeof(ITurnManager))]
-[RequireComponent(typeof(IEffectManager))]
-[RequireComponent(typeof(IUIManager))]
-[RequireComponent(typeof(IVillainAbilityManager))]
+[RequireComponent(typeof(DevInputManager))]
+[RequireComponent(typeof(TurnManager))]
+[RequireComponent(typeof(EffectManager))]
+[RequireComponent(typeof(UIManager))]
+[RequireComponent(typeof(VillainAbilityManager))]
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
@@ -36,7 +35,6 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     internal IEffectManager effectManager;
     internal IUIManager uiManager;
     internal IVillainAbilityManager villainAbilityManager;
-    internal IPreLoader preLoader;
 
     public event Action<GameState> OnStartOfTurn;
     public event Action<GameState> OnEndOfTurn;
@@ -57,7 +55,6 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         cardViewManager = GetComponent<CardViewManager>();
         uiManager = GetComponent<IUIManager>();
         villainAbilityManager = GetComponent<IVillainAbilityManager>();
-        preLoader = GetComponent<IPreLoader>();
     }
 
     private void Start () {
@@ -77,13 +74,9 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     public GameState GetGameState () {
         return this.gameState;
     }
-    public async void StartGame () {
+    public void StartGame () {
 
         if (gameStarted) return;
-
-        await preLoader.Run(PreLoaderAction.LoadAllEffects);
-        await preLoader.Run(PreLoaderAction.LoadAllCreatures);
-        gameData.runtimeGameData.LoadAllSprites();
 
         testDeck1 = gameData.runtimeGameData.GetTestDeck();
         testDeck2 = gameData.runtimeGameData.GetTestDeck();

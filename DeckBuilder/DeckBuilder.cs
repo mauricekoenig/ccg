@@ -26,7 +26,6 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
         this.gameState = new GameState_DeckBuilder();
         this.gameState.OnGameStateChanged += HandleGameStateChange;
 
-        this.preLoader.Run(PreLoaderAction.LoadAllVillains);
         GetVillainData();
     }
 

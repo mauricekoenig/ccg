@@ -43,4 +43,8 @@ public abstract class RuntimeCardData {
         
         Artwork = Utils.CreatureSpriteFromBase64 (ArtworkBase64);
     }
+
+    public override string ToString() {
+        return this.Name;
+    }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public interface IDataBaseService {
 
-    Task SelectAllCreatures ();
+    void SelectAllCreatures ();
     event Action <HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
 
 }

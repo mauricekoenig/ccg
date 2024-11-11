@@ -7,6 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(CardViewManager))]
 public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
 
+    [SerializeField] GameData gameData;
+
     private IMediator mediator;
     private CardViewManager cardViewManager;
 
@@ -53,16 +55,17 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
 
     private void HandleSummonAbility (GameState state, Villain villain) {
 
-
         var summonAbility = villain.ability as VillainAbility_SummonCreature;
         var owner = state.ActivePlayer.ID == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
         var parent = state.ActivePlayer.ID == 1 ? cardViewManager.BoardView1 : cardViewManager.BoardView2;
 
         for (int i = 0; i < summonAbility.howMany; i++) {
 
-            state.ActivePlayer.AddCardToBoard(summonAbility.creatureData);
-            var cardView = cardViewManager.CreateCardView(summonAbility.creatureData, owner, parent);
-            cardView.Init(summonAbility.creatureData, new CardInteraction_Play(cardView));
+            RuntimeCardData creatureData = gameData.GetCardByName(summonAbility.creatureName);
+
+            state.ActivePlayer.AddCardToBoard(creatureData);
+            var cardView = cardViewManager.CreateCardView(creatureData, owner, parent);
+            cardView.Init(creatureData, new CardInteraction_Play(cardView));
         }
 
         this.cardViewManager.UpdateBoard(state.ActivePlayer.ID);

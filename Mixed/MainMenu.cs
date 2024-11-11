@@ -1,6 +1,7 @@
 
 
 
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -16,23 +17,20 @@ public class MainMenu : MonoBehaviour {
         preLoader = GetComponent<PreLoader>();
     }
 
-    public async void LoadAllData () {
+    private void Start() {
 
-        if (this.gameData.Initialized()) {
-            Debug.Log("Initialized! BOOM!");
+        if (RuntimeGameData.Initialized) {
+
+            Debug.Log("Daten sind schon geladen!");
             return;
         }
 
-        await preLoader.Run(PreLoaderAction.LoadAllCreatures);
-        LoadResources();
-    }
+        gameData.Init();
 
-    private void LoadResources () {
-
+        preLoader.Run(PreLoaderAction.LoadAllCreatures);
         preLoader.Run(PreLoaderAction.LoadAllEffects);
         preLoader.Run(PreLoaderAction.LoadAllVillains);
         preLoader.Run(PreLoaderAction.LoadAllCardSprites);
-        this.gameData.runtimeGameData.initialized = true;
     }
 
     public void ChangeScene (int buildIndex) {

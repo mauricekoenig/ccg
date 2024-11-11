@@ -7,6 +7,8 @@ using UnityEngine;
 
 public static class Utils {
 
+    public static bool DataInitialized;
+
     public static Sprite CreatureSpriteFromBase64 (string base64String) {
 
         byte[] imageBytes = Convert.FromBase64String(base64String);

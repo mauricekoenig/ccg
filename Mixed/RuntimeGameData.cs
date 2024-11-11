@@ -7,13 +7,14 @@ using UnityEngine;
 
 public class RuntimeGameData {
 
+    public static bool Initialized;
+
     public RuntimeGameData (GameData data) {
 
         this.gameDataContainer = data;
     }
 
     private GameData gameDataContainer;
-    public bool initialized;
 
     private HashSet<RuntimeCardData> allCards = new();
     private HashSet<CreatureRuntimeCardData> allCreatures = new();
@@ -77,4 +78,8 @@ public class RuntimeGameData {
         return new RuntimeCardDeck("Test Deck", allCards.ToList(), gameDataContainer.TestVillain);
     }
 
+    public void PrintAll () {
+        foreach (var card in allCards)
+            Debug.Log(card.ToString());
+    }
 }
