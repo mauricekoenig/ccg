@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -43,5 +44,9 @@ public class DeckBuilderUI : MonoBehaviour {
             var villainView = Instantiate (cardViewVillain_Collection_Prefab, cardView_Collection_Parent);
             villainView.GetComponent<CardViewVillain_Collection>().Init(card, state);
         }
+    }
+
+    public void ChangeScene (int buildIndex) {
+        SceneManager.LoadScene(buildIndex);
     }
 }

@@ -18,7 +18,11 @@ public class MainMenu : MonoBehaviour {
 
     public async void LoadAllData () {
 
-        if (this.gameData.Initialized()) return;
+        if (this.gameData.Initialized()) {
+            Debug.Log("Initialized! BOOM!");
+            return;
+        }
+
         await preLoader.Run(PreLoaderAction.LoadAllCreatures);
         LoadResources();
     }
@@ -33,7 +37,6 @@ public class MainMenu : MonoBehaviour {
 
     public void ChangeScene (int buildIndex) {
 
-        LoadAllData();
         SceneManager.LoadScene(buildIndex);
     }
 }

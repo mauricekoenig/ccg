@@ -9,9 +9,6 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
     public GameData gameData;
     private GameState_DeckBuilder gameState;
 
-    [SerializeField] private GameObject cardViewCollection_Prefab;
-    [SerializeField] private Transform cardViewCollection_Parent;
-
     private IPreLoader preLoader;
     private DeckBuilderUI deckBuilderUI;
 
@@ -19,19 +16,18 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
     public event Action<GameState_DeckBuilder_ChangeData> OnClickedOnVillain;
 
     private void Awake() {
+
         preLoader = GetComponent<IPreLoader>();
         deckBuilderUI = GetComponent<DeckBuilderUI>();
     }
-    private async void Start() {
 
-        await preLoader.Run(PreLoaderAction.LoadAllVillains);
-        await preLoader.Run(PreLoaderAction.LoadAllEffects);
-        await preLoader.Run(PreLoaderAction.LoadAllCreatures);
-
-        preLoader.Run(PreLoaderAction.LoadAllCardSprites);
+    private void Start() {
 
         this.gameState = new GameState_DeckBuilder();
         this.gameState.OnGameStateChanged += HandleGameStateChange;
+
+        this.preLoader.Run(PreLoaderAction.LoadAllVillains);
+        GetVillainData();
     }
 
     public void HandleGameStateChange (GameState_DeckBuilder_ChangeData data, GameState_DeckBuilder_ChangeReason reason) {
@@ -49,6 +45,7 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
         var villains = gameData.runtimeGameData.GetAllVillains();
         OnVillainDataReceived?.Invoke(villains, GetGameState());
     }
+
     public GameState_DeckBuilder GetGameState() {
         return this.gameState;
     }
