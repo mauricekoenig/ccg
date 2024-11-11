@@ -2,16 +2,20 @@
 
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
 
+    [SerializeField] private Transform cardViewPoolParent;
     [SerializeField] private Transform handView1;
     [SerializeField] private Transform handView2;
     [SerializeField] private Transform boardView1;
     [SerializeField] private Transform boardView2;
     [SerializeField] private Transform graveyardView1;
     [SerializeField] private Transform graveyardView2;
+
+    private Queue<GameObject> cardViewPool = new(); 
 
     public Transform HandView1 => handView1;
     public Transform HandView2 => handView2;
@@ -27,7 +31,9 @@ public class CardViewManager : MonoBehaviour {
     public event Action<GameState, CardView3D> OnCardMovedToPlayZone;
 
     private void Awake() {
+
         mediator = GetComponent<IMediator>();
+        CreateCardViewPool(layoutSettings.CardViewPoolSize);
     }
     private void Start() {
 
@@ -141,9 +147,29 @@ public class CardViewManager : MonoBehaviour {
     }
 
     public CardView3D CreateCardView (RuntimeCardData cardRuntimeData, CardViewOwner owner, Transform parent) {
-        return Instantiate(cardViewPrefab, Vector3.zero, GetCardRotation(owner), parent).GetComponent<CardView3D>();
+
+        if (cardViewPool.Count > 0) {
+
+            GameObject gameObject = cardViewPool.Dequeue();
+            gameObject.transform.SetParent(parent);
+            gameObject.transform.localRotation = GetCardRotation(owner);
+            cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
+            return gameObject.GetComponent<CardView3D>();
+        } 
+        
+        else return Instantiate(cardViewPrefab, Vector3.zero, GetCardRotation(owner), parent).GetComponent<CardView3D>();
     }
 
+    public void DestroyCardView (CardView3D view) {
+
+        view.transform.position = new Vector3(-100, -100, 0);
+        view.ResetView();
+        cardViewPool.Enqueue(view.gameObject);
+
+        #if UNITY_EDITOR
+                cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
+        #endif
+    }
 
     private Quaternion GetCardRotation(CardViewOwner owner) {
         switch (owner) {
@@ -156,5 +182,15 @@ public class CardViewManager : MonoBehaviour {
         }
     }
 
+    private void CreateCardViewPool (int size) {
+
+        for (int i = 0; i < size; i++)
+            cardViewPool.Enqueue(Instantiate(cardViewPrefab, new Vector3(-100, -100, 0), Quaternion.identity, cardViewPoolParent));
+
+        #if UNITY_EDITOR
+            cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
+        #endif
+
+    }
 }
 
