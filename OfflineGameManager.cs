@@ -84,7 +84,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         await preLoader.Run(PreLoaderAction.LoadAllEffects);
         await preLoader.Run(PreLoaderAction.LoadAllCreatures);
 
-        gameData.LoadSpritesForAllCards();
+        gameData.LoadAllSprites();
 
         testDeck1 = gameData.GetTestDeck();
         testDeck2 = gameData.GetTestDeck();

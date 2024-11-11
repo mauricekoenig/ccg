@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(TestDatabaseService))]
-public class TestPreLoader : MonoBehaviour, IPreLoader {
+public class PreLoader : MonoBehaviour, IPreLoader {
 
     public GameData gameData;
     private IDataBaseService databaseService;
@@ -34,6 +34,15 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
             case PreLoaderAction.LoadAllEffects:
                 gameData.LoadAllEffects();
                 break;
+
+            case PreLoaderAction.LoadAllCardSprites:
+                gameData.LoadAllSprites();
+                break;
+
+            case PreLoaderAction.LoadAllVillains:
+                gameData.LoadAllVillains();
+                break;
+
         }
     }
 
@@ -47,5 +56,7 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
 public enum PreLoaderAction {
 
     LoadAllCreatures,
-    LoadAllEffects
+    LoadAllEffects,
+    LoadAllCardSprites,
+    LoadAllVillains
 }

@@ -28,4 +28,8 @@ public static class Utils {
             list[n] = value;
         }
     }
+
+    public static GameState_DeckBuilder_ChangeData GetDeckBuilderChangeData() {
+        return new GameState_DeckBuilder_ChangeData();
+    }
 }

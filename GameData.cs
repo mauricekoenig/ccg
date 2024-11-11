@@ -15,6 +15,7 @@ public class GameData : ScriptableObject {
     private HashSet<SpellRuntimeCardData> allSpells = new();
     private HashSet<LocationRuntimeCardData> allLocations = new();
     private HashSet<BaseEffect> allEffects = new();
+    private HashSet<Villain> allVillains = new();
 
     public RuntimeCardData GetCardById (int id) {
 
@@ -26,6 +27,10 @@ public class GameData : ScriptableObject {
     }
     public HashSet<RuntimeCardData> GetAllCards() {
         return allCards;
+    }
+
+    public HashSet<Villain> GetAllVillains() {
+        return allVillains;
     }
 
     public void AssignSpells (HashSet<SpellRuntimeCardData> spells) {
@@ -51,11 +56,16 @@ public class GameData : ScriptableObject {
         var effects = Resources.LoadAll<BaseEffect>("Effects");
         foreach (var effect in effects) allEffects.Add(effect);
     }
-    public void LoadSpritesForAllCards() {
+    public void LoadAllSprites () {
 
         foreach (var card in allCards) {
             card.Artwork = Utils.CreatureSpriteFromBase64(card.ArtworkBase64);
         }
+    }
+    public void LoadAllVillains () {
+
+        var villains = Resources.LoadAll<Villain>("Villains");
+        foreach (var villain in villains) allVillains.Add(villain);
     }
 
     public RuntimeCardDeck GetTestDeck () {
