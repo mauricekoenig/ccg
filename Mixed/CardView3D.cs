@@ -17,6 +17,18 @@ public class CardView3D : MonoBehaviour
 
     private ICardInteraction interactionLogic;
 
+    public void ResetView() {
+
+        this.data = null;
+        this.viewPosition = CardZone.None;
+        costText.text = string.Empty;
+        atkText.text = string.Empty;
+        healthText.text = string.Empty;
+        nameText.text = string.Empty;
+        interactionLogic = null;
+        artwork.sprite = null;
+    }
+
     public void Init (RuntimeCardData data, ICardInteraction interactionLogic) {
 
         if (data == null) {
