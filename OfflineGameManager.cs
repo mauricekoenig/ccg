@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
-    private bool gameInitialized;
+    private bool gameStarted;
     public List<Player> playerList = new();
     public GameData gameData;
 
@@ -79,15 +79,14 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     }
     public async void StartGame () {
 
-        if (gameInitialized) return;
+        if (gameStarted) return;
 
         await preLoader.Run(PreLoaderAction.LoadAllEffects);
         await preLoader.Run(PreLoaderAction.LoadAllCreatures);
+        gameData.runtimeGameData.LoadAllSprites();
 
-        gameData.LoadAllSprites();
-
-        testDeck1 = gameData.GetTestDeck();
-        testDeck2 = gameData.GetTestDeck();
+        testDeck1 = gameData.runtimeGameData.GetTestDeck();
+        testDeck2 = gameData.runtimeGameData.GetTestDeck();
 
         for (int i = 0; i < playerList.Count; i++) {  
             
@@ -103,7 +102,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         this.uiManager.CreateVillains(this.gameState);
         this.turnManager.DrawStartHand();
 
-        gameInitialized = true;
+        gameStarted = true;
 
         Invoke_GameStateChanged();
     }

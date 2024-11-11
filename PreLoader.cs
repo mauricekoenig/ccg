@@ -17,6 +17,7 @@ public class PreLoader : MonoBehaviour, IPreLoader {
     private void Awake() {
         
         databaseService = GetComponent<IDataBaseService>();
+        this.gameData.Init();
     }
     private void Start() {
 
@@ -32,15 +33,15 @@ public class PreLoader : MonoBehaviour, IPreLoader {
                 break;
 
             case PreLoaderAction.LoadAllEffects:
-                gameData.LoadAllEffects();
+                gameData.runtimeGameData.LoadAllEffects();
                 break;
 
             case PreLoaderAction.LoadAllCardSprites:
-                gameData.LoadAllSprites();
+                gameData.runtimeGameData.LoadAllSprites();
                 break;
 
             case PreLoaderAction.LoadAllVillains:
-                gameData.LoadAllVillains();
+                gameData.runtimeGameData.LoadAllVillains();
                 break;
 
         }
@@ -48,7 +49,7 @@ public class PreLoader : MonoBehaviour, IPreLoader {
 
     public void Handler_OnSelectAllCreatures(HashSet<CreatureRuntimeCardData> data) {
 
-        gameData.AssignCreatures(data);
+        gameData.runtimeGameData.AssignCreatures(data);
     }
 
 }

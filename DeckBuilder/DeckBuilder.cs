@@ -46,7 +46,7 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
 
     public void GetVillainData () {
 
-        var villains = gameData.GetAllVillains();
+        var villains = gameData.runtimeGameData.GetAllVillains();
         OnVillainDataReceived?.Invoke(villains, GetGameState());
     }
     public GameState_DeckBuilder GetGameState() {

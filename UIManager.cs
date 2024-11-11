@@ -7,6 +7,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(FindCardManager))]
 public class UIManager : MonoBehaviour, IUIManager {
@@ -131,5 +132,9 @@ public class UIManager : MonoBehaviour, IUIManager {
 
         villain1UI.Init(p1.Villain, state);
         villain2UI.Init(p2.Villain, state);
+    }
+
+    public void ChangeScene (int buildIndex) {
+        SceneManager.LoadScene(buildIndex);
     }
 }
