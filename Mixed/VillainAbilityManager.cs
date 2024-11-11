@@ -2,7 +2,6 @@
 
 
 using System;
-using UnityEditor.Playables;
 using UnityEngine;
 
 [RequireComponent(typeof(CardViewManager))]
