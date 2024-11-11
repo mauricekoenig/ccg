@@ -32,7 +32,7 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
                 break;
 
             case PreLoaderAction.LoadAllEffects:
-                await gameData.LoadAllEffects();
+                gameData.LoadAllEffects();
                 break;
         }
     }

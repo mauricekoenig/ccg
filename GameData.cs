@@ -46,12 +46,10 @@ public class GameData : ScriptableObject {
         foreach (var card in cards) allCards.Add(card);
     }
 
-    public async void LoadAllEffects () {
+    public void LoadAllEffects () {
 
-        await Task.Run(() => {
-            var effects = Resources.LoadAll<BaseEffect>("Effects");
-            foreach (var effect in effects) allEffects.Add(effect);
-        });
+        var effects = Resources.LoadAll<BaseEffect>("Effects");
+        foreach (var effect in effects) allEffects.Add(effect);
     }
     public void LoadSpritesForAllCards() {
 
