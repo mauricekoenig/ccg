@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardView_Collection : MonoBehaviour, IPointerDownHandler
+public class CollectionElement : MonoBehaviour, IPointerDownHandler
 {
     public Image Artwork;
     private RuntimeCardData cardData;

@@ -26,4 +26,7 @@ public class GameData : ScriptableObject {
         return this.runtimeGameData.GetCardById(id);
     }
 
+    public HashSet<RuntimeCardData> GetAllCards() {
+        return this.runtimeGameData.GetAllCards();
+    }
 }
