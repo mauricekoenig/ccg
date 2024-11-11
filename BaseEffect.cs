@@ -7,6 +7,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public abstract class BaseEffect : ScriptableObject, IEffect, IIdentifiable {
 
+    public string text;
     [SerializeField] private int id;
     public List<EffectTarget> targets = new();
     public List<EffectTrigger> triggers = new();

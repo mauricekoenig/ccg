@@ -1,9 +1,7 @@
 ﻿
-
-
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,6 +14,7 @@ public class GameData : ScriptableObject {
     private HashSet<CreatureRuntimeCardData> allCreatures = new();
     private HashSet<SpellRuntimeCardData> allSpells = new();
     private HashSet<LocationRuntimeCardData> allLocations = new();
+    private HashSet<BaseEffect> allEffects = new();
 
     public RuntimeCardData GetCardById (int id) {
 
@@ -25,30 +24,44 @@ public class GameData : ScriptableObject {
 
         return allCards.Where(x => x.Name == name).FirstOrDefault();
     }
+    public HashSet<RuntimeCardData> GetAllCards() {
+        return allCards;
+    }
 
     public void AssignSpells (HashSet<SpellRuntimeCardData> spells) {
 
         allSpells = spells;
-        allCards.AddRange(spells);
+        foreach (var card in spells) allCards.Add(card);
     }
     public void AssignCreatures (HashSet<CreatureRuntimeCardData> creatures) {
 
         allCreatures = creatures;
-        allCards.AddRange(creatures);
+        foreach (var card in creatures) allCards.Add(card);
     }
     public void AssignLocations (HashSet<LocationRuntimeCardData> locations) {
         allLocations = locations;
-        allCards.AddRange(locations);
+        foreach (var card in allLocations) allCards.Add(card);
+    }
+    public void AssignCards <T> (HashSet<T> cards) where T : RuntimeCardData {
+        foreach (var card in cards) allCards.Add(card);
     }
 
-    public RuntimeCardDeck GetTestDeck () {
-        return new RuntimeCardDeck("Test Deck", allCards.ToList(), TestVillain);
-    }
+    public async void LoadAllEffects () {
 
+        await Task.Run(() => {
+            var effects = Resources.LoadAll<BaseEffect>("Effects");
+            foreach (var effect in effects) allEffects.Add(effect);
+        });
+    }
     public void LoadSpritesForAllCards() {
 
         foreach (var card in allCards) {
             card.Artwork = Utils.CreatureSpriteFromBase64(card.ArtworkBase64);
         }
     }
+
+    public RuntimeCardDeck GetTestDeck () {
+        return new RuntimeCardDeck("Test Deck", allCards.ToList(), TestVillain);
+    }
+
 }

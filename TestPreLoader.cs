@@ -30,6 +30,10 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
             case PreLoaderAction.LoadAllCreatures:
                 await databaseService.SelectAllCreatures();
                 break;
+
+            case PreLoaderAction.LoadAllEffects:
+                await gameData.LoadAllEffects();
+                break;
         }
     }
 
@@ -42,5 +46,6 @@ public class TestPreLoader : MonoBehaviour, IPreLoader {
 
 public enum PreLoaderAction {
 
-    LoadAllCreatures
+    LoadAllCreatures,
+    LoadAllEffects
 }

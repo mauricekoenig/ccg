@@ -1,0 +1,6 @@
+﻿
+EFFECT LOOKUP TABLE
+
+Fate:
+01 = Fate: Deal 1 damage to all enemy creatures.
+
