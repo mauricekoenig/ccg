@@ -9,10 +9,9 @@ using System.Collections.Generic;
 
 public class TestDatabaseService : MonoBehaviour, IDataBaseService {
 
-    public TextMeshProUGUI display;
     [SerializeField] private string connectionString;
 
-    public event Action<HashSet<CreatureData>> OnSelectAllCreatures;
+    public event Action<HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
 
     void Start () {
 
@@ -20,11 +19,11 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
         connectionString = "Data Source=" + dbPath;
     }
 
-    public async void SelectAllCreatures() {
+    public async Task SelectAllCreatures() {
 
         try {
 
-            HashSet<CreatureData> creatureList = await Task.Run(() => {
+            HashSet<CreatureRuntimeCardData> creatureList = await Task.Run(() => {
 
                 using (var dbConnection = new SQLiteConnection(connectionString)) {
 
@@ -37,7 +36,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
 
                         using (IDataReader reader = dbCommand.ExecuteReader()) {
 
-                            var creatures = new HashSet<CreatureData>();
+                            var creatures = new HashSet<CreatureRuntimeCardData>();
 
                             while (reader.Read()) {
 
@@ -48,7 +47,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
                                 int attack = reader.GetInt32(reader.GetOrdinal("Attack"));
                                 int health = reader.GetInt32(reader.GetOrdinal("HP"));
 
-                                var creatureData = new CreatureData(id, name, cost, base64, attack, health);
+                                var creatureData = new CreatureRuntimeCardData(id, name, cost, base64, attack, health);
                                 creatures.Add(creatureData);
                             }
 
@@ -58,7 +57,6 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
                 }
             });
 
-            foreach (var creature in creatureList) creature.LoadSprite();
             OnSelectAllCreatures?.Invoke(creatureList);
         } 
         

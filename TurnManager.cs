@@ -17,7 +17,7 @@ public class TurnManager : MonoBehaviour, ITurnManager {
 
     public event Action OnStartOfTurn;
     public event Action OnEndOfTurn;
-    public event Action<CardRuntimeData, int> OnCardDraw;
+    public event Action<RuntimeCardData, int> OnCardDraw;
 
     public int Turns => turns;
     public Player ActivePlayer => activePlayer;
@@ -74,7 +74,7 @@ public class TurnManager : MonoBehaviour, ITurnManager {
 
     public void DrawCard (Player player) {
 
-        CardRuntimeData card = player.DrawCard();
+        RuntimeCardData card = player.DrawCard();
         OnCardDraw?.Invoke(card, player.ID);
     }
 }

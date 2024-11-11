@@ -14,7 +14,7 @@ public interface ITurnManager {
     event Action OnStartOfTurn;
     event Action OnEndOfTurn;
 
-    event Action<CardRuntimeData, int> OnCardDraw;
+    event Action<RuntimeCardData, int> OnCardDraw;
 
     void StartTurn();
     void EndTurn();

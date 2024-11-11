@@ -7,7 +7,7 @@ public class CardView3D : MonoBehaviour
 {
     public SpriteRenderer cost;
     public SpriteRenderer artwork;
-    public CardRuntimeData data;
+    public RuntimeCardData data;
     public CardZone viewPosition;
 
     public TextMeshPro costText;
@@ -17,24 +17,25 @@ public class CardView3D : MonoBehaviour
 
     private ICardInteraction interactionLogic;
 
-    public void Init (CardRuntimeData data, ICardInteraction interactionLogic) {
+    public void Init (RuntimeCardData data, ICardInteraction interactionLogic) {
+
+        if (data == null) {
+            Debug.Log("NULL!");
+            return;
+        }
 
         this.data = data;
-        this.costText.text = data.cardCost.ToString();
-        artwork.sprite = data.artwork;
-        nameText.text = data.cardName;
+        this.costText.text = data.Cost.ToString();
+        artwork.sprite = data.Artwork;
+        nameText.text = data.Name;
 
-        if (data is CreatureRuntimeData) {
+        if (data is CreatureRuntimeCardData) {
 
-            CreatureRuntimeData crd = data as CreatureRuntimeData;
+            CreatureRuntimeCardData crd = data as CreatureRuntimeCardData;
             atkText.text = crd.Attack.ToString();
             healthText.text = crd.Health.ToString();
         }
 
-
-        if (data is SpellRuntimeData) {
-
-        }
 
         this.interactionLogic = interactionLogic;
     }

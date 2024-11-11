@@ -7,11 +7,13 @@ using System;
 
 public class PlayerCards : MonoBehaviour {
 
-    [SerializeField] private List<CardRuntimeData> deck = new();
-    [SerializeField] private List<CardRuntimeData> hand = new();
-    [SerializeField] private List<CardRuntimeData> inPlay = new();
-    [SerializeField] private List<CardRuntimeData> graveyard = new();
-    [SerializeField] private List<CardRuntimeData> exiled = new();
+    private ICardDeck cardDeck;
+
+    [SerializeField] private List<RuntimeCardData> deck = new();
+    [SerializeField] private List<RuntimeCardData> hand = new();
+    [SerializeField] private List<RuntimeCardData> inPlay = new();
+    [SerializeField] private List<RuntimeCardData> graveyard = new();
+    [SerializeField] private List<RuntimeCardData> exiled = new();
 
     public int DeckSize => deck.Count;
     public int HandSize => hand.Count;
@@ -19,17 +21,19 @@ public class PlayerCards : MonoBehaviour {
     public int GraveyardSize => graveyard.Count;
     public int ExiledSize => exiled.Count;
 
-    public List<CardRuntimeData> Deck => deck;
+    public List<RuntimeCardData> Deck => deck;
 
     public int OnBoard => inPlay.Count;
 
-    public void Init (List<CardRuntimeData> deckList) {
+    public void Init (ICardDeck deck) {
 
+        Debug.Log("DECK COUNT: " + deck.Cards.Count);
         ClearAllZones();
-        this.deck = deckList;
+        this.cardDeck = deck;
+        this.deck.AddRange(deck.Cards);
     }
 
-    public void AddCardToZone (CardRuntimeData card, CardZone zone) {
+    public void AddCardToZone (RuntimeCardData card, CardZone zone) {
 
         switch (zone) {
 
@@ -50,7 +54,7 @@ public class PlayerCards : MonoBehaviour {
         }
 
     }
-    public void RemoveCardFromZone (CardRuntimeData card, CardZone zone) {
+    public void RemoveCardFromZone (RuntimeCardData card, CardZone zone) {
 
         switch (zone) {
 
@@ -70,22 +74,22 @@ public class PlayerCards : MonoBehaviour {
                 break;
         }
     }
-    public void MoveCardBetweenZones (CardRuntimeData card, CardZone fromZone, CardZone toZone) {
+    public void MoveCardBetweenZones (RuntimeCardData card, CardZone fromZone, CardZone toZone) {
 
         RemoveCardFromZone(card, fromZone);
         AddCardToZone(card, toZone);
     }
 
-    public CardRuntimeData DrawCardFromDeck () {
+    public RuntimeCardData DrawCardFromDeck () {
 
         if (deck.Count <= 0) return null;
-        CardRuntimeData card = deck[deck.Count - 1];
+        RuntimeCardData card = deck[deck.Count - 1];
         deck.RemoveAt(deck.Count - 1);
         hand.Add(card);
         return card;
     }
 
-    public CardRuntimeData GetRandomCardInHand () {
+    public RuntimeCardData GetRandomCardInHand () {
         if (hand.Count <= 0) return null;
         return hand[UnityEngine.Random.Range(0, hand.Count - 1)];
     }

@@ -19,10 +19,10 @@ public class CardInteraction_Hand : ICardInteraction {
 
         if (gameState.ActivePlayer.CardsOnBoard > 4) return;
 
-        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.data.cardCost) {
+        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.data.Cost) {
 
             gameState.ActivePlayer.cards.MoveCardBetweenZones(cardView.data, CardZone.Hand, CardZone.Play);
-            gameState.ActivePlayer.resources.currentMana -= cardView.data.cardCost;
+            gameState.ActivePlayer.resources.currentMana -= cardView.data.Cost;
 
             var changeData = GameStateChangeData.New(gameState);
             changeData.affectedView = this.cardView;

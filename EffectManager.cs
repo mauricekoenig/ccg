@@ -11,11 +11,11 @@ public class EffectManager : MonoBehaviour, IEffectManager {
         mediator = GetComponent<IMediator>();
     }
 
-    public void Handle (CardRuntimeData card) {
+    public void Handle (RuntimeCardData card) {
 
         GameState state = mediator.GetGameState();
 
-        foreach (var effect in card.effects) {
+        foreach (var effect in card.Effects) {
 
             if (!AllConditionsMet(effect, state)) return;
             effect.Apply(state);

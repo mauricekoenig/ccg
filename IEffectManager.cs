@@ -1,5 +1,5 @@
 ﻿
 public interface IEffectManager {
 
-    public void Handle(CardRuntimeData data);
+    public void Handle(RuntimeCardData data);
 }
