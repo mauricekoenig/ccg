@@ -7,7 +7,7 @@
 
 <h3>Gameplay (Updated)</h3>
 
-![screenshot2 game](screen_gameplay.png)
+![screenshot2 game](screen_gameplay2.png)
 
 <h3>Gameplay (simplified)</h3>
 
