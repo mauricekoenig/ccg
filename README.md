@@ -16,12 +16,12 @@
 
 <h3>Deck Editor - Villain Selection (Updated)</h3>
 
-![screenshot2 game](screen_deckbuilder.png)
+![screenshot2 game](screen_deckbuilder3.png)
 
 
 <h3>Deck Editor - Collection (Updated)</h3>
 
-![screenshot2 game](screen_deckbuilder2.png)
+![screenshot2 game](screen_deckbuilder4.png)
 
 
 <h3>Deck Editor (simplified)</h3>
