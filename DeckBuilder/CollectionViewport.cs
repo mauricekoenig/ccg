@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class CollectionViewport : MonoBehaviour {
 
+
+    private GameState_DeckBuilder gameState;
     [SerializeField] private GameData gameData;
 
     [SerializeField] private Transform viewport_Cards;
@@ -19,16 +21,22 @@ public class CollectionViewport : MonoBehaviour {
     [SerializeField] private GameObject collectionIcon;
     [SerializeField] private TextMeshProUGUI heading;
 
+    public void ShowDecks (GameState_DeckBuilder state) {
 
-    public void ShowDecks () {
+        this.gameState = state;
+        ClearCollectionViewPorts();
 
-        ClearViewports();
-        var metaData = gameData.GetAllDeckMetaData();
-        foreach (var record in metaData) Instantiate(deckPreviewPrefab, viewport_Decks);
-        Debug.Log(metaData.Count);
+        var deckRecords = gameData.GetAllDatabaseDeckRecords();;
+
+        foreach (var record in deckRecords) {
+
+            var runtimeDeck = Utils.GetRuntimeDeck(record, gameData);
+            var deckPreview = Instantiate(deckPreviewPrefab, viewport_Decks).GetComponent<DeckPreview>();
+            deckPreview.Init(runtimeDeck, this.gameState);
+        }
     }
 
-    private void ClearViewports () {
+    public void ClearCollectionViewPorts () {
 
         foreach (Transform t in viewport_Decks) Destroy(t.gameObject);
         foreach (Transform t in viewport_Cards) Destroy(t.gameObject);

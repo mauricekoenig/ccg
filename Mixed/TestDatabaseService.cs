@@ -12,7 +12,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
     [SerializeField] private string connectionString;
 
     public event Action<HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
-    public event Action<HashSet<DeckMetaData>> OnSelectAllDecks;
+    public event Action<HashSet<DatabaseDeckRecord>> OnSelectAllDecks;
 
     void Awake () {
 
@@ -24,7 +24,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
 
         try {
 
-            HashSet<DeckMetaData> set = new();
+            HashSet<DatabaseDeckRecord> set = new();
 
             using (var dbConnection = new SQLiteConnection(connectionString)) {
 
@@ -41,7 +41,9 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
 
                             int villainId = reader.GetInt32(reader.GetOrdinal("villain_id"));
                             string deckCode = reader.GetString(reader.GetOrdinal("code"));
-                            DeckMetaData deckMetaData = new DeckMetaData(villainId, deckCode);
+                            string deckName = reader.GetString(reader.GetOrdinal("name"));
+
+                            DatabaseDeckRecord deckMetaData = new DatabaseDeckRecord(villainId, deckCode, deckName);
 
                             set.Add(deckMetaData);
                         }
@@ -52,7 +54,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
             }
         } catch (Exception ex) {
 
-            Debug.LogError($"Error while fetching creatures: {ex.Message}");
+            Debug.LogError($"Error while fetching decks: {ex.Message}");
         }
 
     }

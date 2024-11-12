@@ -54,10 +54,9 @@ public class PreLoader : MonoBehaviour, IPreLoader {
         gameData.runtimeGameData.AssignCreatures(data);
     }
 
-    public void Handler_OnSelectAllDecks (HashSet<DeckMetaData> metaData) {
+    public void Handler_OnSelectAllDecks (HashSet<DatabaseDeckRecord> metaData) {
 
-        gameData.runtimeGameData.AssignDeckMetaData(metaData);
-        Debug.Log("PreLoader: Handler_OnSelectAllDecks - Deck Count: " + metaData.Count);
+        gameData.runtimeGameData.AssignDatabaseDeckRecords(metaData);
     }
 }
 

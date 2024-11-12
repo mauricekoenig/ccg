@@ -22,11 +22,11 @@ public class RuntimeGameData {
     private HashSet<LocationRuntimeCardData> allLocations = new();
     private HashSet<BaseEffect> allEffects = new();
     private HashSet<Villain> allVillains = new();
-    private HashSet<DeckMetaData> allDecksMetaData = new();
+    private HashSet<DatabaseDeckRecord> allDatabaseDeckRecords = new();
 
     public RuntimeCardData GetCardById(int id) {
 
-        return allCards.Where(x => x.Id == id).FirstOrDefault();
+        return allCards.Where(x => x.ID == id).FirstOrDefault();
     }
     public RuntimeCardData GetCardByName(string name) {
 
@@ -40,12 +40,15 @@ public class RuntimeGameData {
         return allVillains;
     }
 
-    public HashSet<DeckMetaData> GetAllDeckMetaData () {
-        return this.allDecksMetaData;
+    public Villain GetVillainById (int id) {
+        return allVillains.Where(x =>  id == x.ID).FirstOrDefault();
+    }
+    public HashSet<DatabaseDeckRecord> GetAllDeckMetaData () {
+        return this.allDatabaseDeckRecords;
     }
 
-    public void AssignDeckMetaData (HashSet<DeckMetaData> metaData) {
-        this.allDecksMetaData = metaData;
+    public void AssignDatabaseDeckRecords (HashSet<DatabaseDeckRecord> deckRecords) {
+        this.allDatabaseDeckRecords = deckRecords;
     }
 
     public void AssignSpells(HashSet<SpellRuntimeCardData> spells) {

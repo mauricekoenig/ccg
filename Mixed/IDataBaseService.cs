@@ -12,6 +12,6 @@ public interface IDataBaseService {
     void SelectAllDecks();
 
     event Action <HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
-    event Action<HashSet<DeckMetaData>> OnSelectAllDecks;
+    event Action<HashSet<DatabaseDeckRecord>> OnSelectAllDecks;
 
 }

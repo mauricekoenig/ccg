@@ -17,7 +17,9 @@ public class DeckBuilderUI : MonoBehaviour {
     private DeckSideBar deckSideBar;
     private CollectionViewport collectionViewport;
 
+
     [SerializeField] private GameData gameData;
+    private GameState_DeckBuilder gameState;
 
     private void Awake() {
 
@@ -32,10 +34,10 @@ public class DeckBuilderUI : MonoBehaviour {
         deckBuilder.OnDeckBuilderEntered += Handler_OnDeckBuilderEntered;
     }
 
-    private void Handler_OnDeckBuilderEntered () {
+    private void Handler_OnDeckBuilderEntered (GameState_DeckBuilder state) {
 
-        Debug.Log("DeckBuilderUI: Handler_OnDeckBuilderEntered - Meta Data Count: " + gameData.GetAllDeckMetaData().Count);
-        this.collectionViewport.ShowDecks();
+        this.gameState = state;
+        this.collectionViewport.ShowDecks(state);
     }
     private void Handler_OnClickedOnVillain(GameState_DeckBuilder_ChangeData data) {
 
@@ -44,7 +46,8 @@ public class DeckBuilderUI : MonoBehaviour {
     private void Handler_OnClickedOnDeckPreview (DeckPreview deckPreview) {
 
 
-        
+        collectionViewport.ClearCollectionViewPorts();
+        deckSideBar.Show(deckPreview, this.gameState);
     }
 
     public void ChangeScene (int buildIndex) {

@@ -12,21 +12,20 @@ public class DeckPreview : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
     [SerializeField] private TextMeshProUGUI deckNameDisplay;
     [SerializeField] private Image villainPreview;
 
-    public Villain VillainData;
-    public DeckMetaData MetaData { get; private set; }
+    public RuntimeCardDeck Deck { get; set; }
 
     private string deckName;
     public string DeckName => deckName;
 
-
-    public void Init (GameState_DeckBuilder state, string name, Villain villain, DeckMetaData metaData) {
-
-        deckName = name;
-        deckNameDisplay.text = this.deckName;
-        VillainData = villain;
+    public void Init (RuntimeCardDeck deck, GameState_DeckBuilder state) {
 
         this.gameState = state;
-        this.MetaData = metaData;
+
+        deckName = deck.Name;
+        deckNameDisplay.text = deck.Name;
+
+        this.Deck = deck;
+        this.villainPreview.sprite = deck.Villain.artwork;
     }
 
     public void OnPointerDown (PointerEventData eventData) {

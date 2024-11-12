@@ -5,14 +5,16 @@ using System.Collections.Generic;
 
 [System.Serializable]
 
-public class DeckMetaData {
+public class DatabaseDeckRecord {
 
     public int VillainID { get; }
     public string DeckCode { get; }
+    public string DeckName { get; }
 
-    public DeckMetaData (int villainID, string deckCode) {
+    public DatabaseDeckRecord (int villainID, string deckCode, string deckName) {
 
         this.VillainID = villainID;
         this.DeckCode = deckCode;
+        this.DeckName = deckName;
     }
 }

@@ -30,7 +30,11 @@ public class GameData : ScriptableObject {
         return this.runtimeGameData.GetAllCards();
     }
 
-    public HashSet<DeckMetaData> GetAllDeckMetaData () {
+    public HashSet<DatabaseDeckRecord> GetAllDatabaseDeckRecords () {
         return this.runtimeGameData.GetAllDeckMetaData();
+    }
+
+    public Villain GetVillainById(int id) {
+        return this.runtimeGameData.GetVillainById(id);
     }
 }

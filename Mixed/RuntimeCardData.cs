@@ -5,9 +5,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class RuntimeCardData {
+public abstract class RuntimeCardData : IIdentifiable {
 
-    public int Id { get; set; }
+    public int ID { get;}
     public string Name { get; set; }
     public int Cost { get; set; }
     public Sprite Artwork { get; set; }
@@ -22,7 +22,7 @@ public abstract class RuntimeCardData {
 
     public RuntimeCardData (int id, string name, int cost, string artworkBase64) {
 
-        Id = id;
+        ID = id;
         Name = name;
         Cost = cost;
         ArtworkBase64 = artworkBase64;
@@ -31,7 +31,7 @@ public abstract class RuntimeCardData {
 
     public RuntimeCardData (int id, string name, int cost, Sprite artwork, CardRarity rarity, HashSet<BaseEffect> effects) {
 
-        Id = id;
+        ID = id;
         Name = name;
         Cost = cost;
         Artwork = artwork;
