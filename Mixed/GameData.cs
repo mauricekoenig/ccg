@@ -29,4 +29,8 @@ public class GameData : ScriptableObject {
     public HashSet<RuntimeCardData> GetAllCards() {
         return this.runtimeGameData.GetAllCards();
     }
+
+    public HashSet<DeckMetaData> GetAllDeckMetaData () {
+        return this.runtimeGameData.GetAllDeckMetaData();
+    }
 }

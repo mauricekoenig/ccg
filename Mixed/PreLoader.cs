@@ -19,7 +19,7 @@ public class PreLoader : MonoBehaviour, IPreLoader {
         databaseService = GetComponent<IDataBaseService>();
         if (RuntimeGameData.Initialized) return;
         this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
-        this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
+        this.databaseService.OnSelectAllDecks += Handler_OnSelectAllDecks;
     }
 
     public void Run (PreLoaderAction action) {
@@ -42,6 +42,10 @@ public class PreLoader : MonoBehaviour, IPreLoader {
                 gameData.runtimeGameData.LoadAllVillains();
                 break;
 
+            case PreLoaderAction.LoadAllDecks:
+                databaseService.SelectAllDecks();
+                break;
+
         }
     }
 
@@ -50,6 +54,11 @@ public class PreLoader : MonoBehaviour, IPreLoader {
         gameData.runtimeGameData.AssignCreatures(data);
     }
 
+    public void Handler_OnSelectAllDecks (HashSet<DeckMetaData> metaData) {
+
+        gameData.runtimeGameData.AssignDeckMetaData(metaData);
+        Debug.Log("PreLoader: Handler_OnSelectAllDecks - Deck Count: " + metaData.Count);
+    }
 }
 
 public enum PreLoaderAction {
@@ -57,5 +66,6 @@ public enum PreLoaderAction {
     LoadAllCreatures,
     LoadAllEffects,
     LoadAllCardSprites,
-    LoadAllVillains
+    LoadAllVillains,
+    LoadAllDecks
 }

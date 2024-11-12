@@ -14,6 +14,8 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
 
     public event Action<HashSet<Villain>, GameState_DeckBuilder> OnVillainDataReceived;
     public event Action<GameState_DeckBuilder_ChangeData> OnClickedOnVillain;
+    public event Action<DeckPreview> OnClickedOnDeckPreview;
+    public event Action OnDeckBuilderEntered;
 
     private void Awake() {
 
@@ -26,7 +28,8 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
         this.gameState = new GameState_DeckBuilder();
         this.gameState.OnGameStateChanged += HandleGameStateChange;
 
-        GetVillainData();
+        if (RuntimeGameData.Initialized)
+        OnDeckBuilderEntered?.Invoke();
     }
 
     public void HandleGameStateChange (GameState_DeckBuilder_ChangeData data, GameState_DeckBuilder_ChangeReason reason) {
@@ -36,6 +39,10 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
             case GameState_DeckBuilder_ChangeReason.Input_ClickedOnVillain:
                 OnClickedOnVillain?.Invoke(data);
                 break;
+
+            case GameState_DeckBuilder_ChangeReason.Input_ClickedOnDeckPreview:
+                OnClickedOnDeckPreview?.Invoke(data.deckPreview);
+                break; 
         }
     }
 

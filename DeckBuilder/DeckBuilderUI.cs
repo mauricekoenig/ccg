@@ -8,73 +8,47 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(DeckSideBar))]
+[RequireComponent(typeof(CollectionViewport))]
 
 public class DeckBuilderUI : MonoBehaviour {
 
-    IDeckBuilder deckBuilder;
+    private IDeckBuilder deckBuilder;
+    private DeckSideBar deckSideBar;
+    private CollectionViewport collectionViewport;
 
     [SerializeField] private GameData gameData;
 
-    [SerializeField] private TMP_InputField deck_Name;
-    [SerializeField] private Image deck_VillainArtwork;
-
-    [SerializeField] private Transform collectionElementParent;
-    [SerializeField] private Transform deckElementParent;
-
-    [SerializeField] private GameObject collectionElementPrefab;
-    [SerializeField] private GameObject collectionElementVillainPrefab;
-    [SerializeField] private GameObject deckElementPrefab;
-
-    [SerializeField] private GameObject villainIcon;
-    [SerializeField] private GameObject collectionIcon;
-
-    [SerializeField] private TextMeshProUGUI heading;
-
     private void Awake() {
+
         deckBuilder = GetComponent<DeckBuilder>();
+        deckSideBar = GetComponent<DeckSideBar>();
+        collectionViewport = GetComponent<CollectionViewport>();
     }
     private void Start() {
-        deckBuilder.OnVillainDataReceived += Handler_OnVillainDataReceived;
+
         deckBuilder.OnClickedOnVillain += Handler_OnClickedOnVillain;
+        deckBuilder.OnClickedOnDeckPreview += Handler_OnClickedOnDeckPreview;
+        deckBuilder.OnDeckBuilderEntered += Handler_OnDeckBuilderEntered;
     }
 
+    private void Handler_OnDeckBuilderEntered () {
+
+        Debug.Log("DeckBuilderUI: Handler_OnDeckBuilderEntered - Meta Data Count: " + gameData.GetAllDeckMetaData().Count);
+        this.collectionViewport.ShowDecks();
+    }
     private void Handler_OnClickedOnVillain(GameState_DeckBuilder_ChangeData data) {
 
-        deck_VillainArtwork.sprite = data.villain.artwork;
-        deck_Name.text = $"New {data.villain.Name} Deck";
 
-        ClearCollectionParent();
-
-        heading.text = "Collection";
-        villainIcon.SetActive(false);
-        collectionIcon.SetActive(true);
-
-        var cards = gameData.GetAllCards();
-
-        foreach (var card in cards) {
-            GameObject collectionElement = Instantiate(collectionElementPrefab, collectionElementParent);
-            collectionElement.GetComponent<CollectionElement>().Init(card);
-        }
     }
+    private void Handler_OnClickedOnDeckPreview (DeckPreview deckPreview) {
 
-    private void Handler_OnVillainDataReceived (HashSet<Villain> villains, GameState_DeckBuilder state) {
 
-        Debug.Log(villains.Count);
-
-        foreach (var card in villains) {
-            var villainView = Instantiate (collectionElementVillainPrefab, collectionElementParent);
-            villainView.GetComponent<CardViewVillain_Collection>().Init(card, state);
-        }
-    }
-
-    private void ClearCollectionParent () {
-
-        foreach (Transform t in collectionElementParent) {
-            Destroy(t.gameObject);
-        }
+        
     }
 
     public void ChangeScene (int buildIndex) {
         SceneManager.LoadScene(buildIndex);
     }
+
 }

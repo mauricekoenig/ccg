@@ -22,6 +22,7 @@ public class RuntimeGameData {
     private HashSet<LocationRuntimeCardData> allLocations = new();
     private HashSet<BaseEffect> allEffects = new();
     private HashSet<Villain> allVillains = new();
+    private HashSet<DeckMetaData> allDecksMetaData = new();
 
     public RuntimeCardData GetCardById(int id) {
 
@@ -37,6 +38,14 @@ public class RuntimeGameData {
 
     public HashSet<Villain> GetAllVillains() {
         return allVillains;
+    }
+
+    public HashSet<DeckMetaData> GetAllDeckMetaData () {
+        return this.allDecksMetaData;
+    }
+
+    public void AssignDeckMetaData (HashSet<DeckMetaData> metaData) {
+        this.allDecksMetaData = metaData;
     }
 
     public void AssignSpells(HashSet<SpellRuntimeCardData> spells) {
