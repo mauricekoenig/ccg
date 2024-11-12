@@ -14,6 +14,7 @@ public class DeckSideBar : MonoBehaviour {
     [SerializeField] private GameObject deckSideBar;
     private DeckPreview deckPreview;
     public GameObject navigateBackArrow;
+    [SerializeField] private TextMeshProUGUI heading;
 
     private Animator anim;
     private GameState_DeckBuilder state;
@@ -28,6 +29,7 @@ public class DeckSideBar : MonoBehaviour {
         ClearSideBar();
         this.state = state;
         this.deckPreview = deckPreview;
+        SetHeader("Cards");
         this.anim.Play("DeckBuilder_SideBar_FadeIn");
         villainArtwork.sprite = deckPreview.Deck.Villain.artwork;
         deckName.text = deckPreview.DeckName;
@@ -60,5 +62,8 @@ public class DeckSideBar : MonoBehaviour {
         villainArtwork.sprite = null;
         deckName.text = string.Empty;
         ClearDeckElements();
+    }
+    private void SetHeader (string text) {
+        this.heading.text = text;
     }
 }

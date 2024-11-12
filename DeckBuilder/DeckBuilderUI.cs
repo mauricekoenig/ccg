@@ -45,9 +45,9 @@ public class DeckBuilderUI : MonoBehaviour {
     }
     private void Handler_OnClickedOnDeckPreview (DeckPreview deckPreview) {
 
-
         collectionViewport.ClearCollectionViewPorts();
         deckSideBar.Show(deckPreview, this.gameState);
+        collectionViewport.ShowCards();
     }
 
     public void ChangeScene (int buildIndex) {

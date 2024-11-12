@@ -16,17 +16,29 @@ public class CollectionViewport : MonoBehaviour {
     [SerializeField] private GameObject collectionElementPrefab;
     [SerializeField] private GameObject collectionElementVillainPrefab;
     [SerializeField] private GameObject deckPreviewPrefab;
+    [SerializeField] private GameObject addNewDeckPrefab;
 
     [SerializeField] private GameObject villainIcon;
     [SerializeField] private GameObject collectionIcon;
     [SerializeField] private TextMeshProUGUI heading;
 
+    [SerializeField] private Animator anim;
+
+    public void AddNewDeck () {
+
+        ClearCollectionViewPorts();
+    }
+
+    public void ShowVillains () {
+
+    }
     public void ShowDecks (GameState_DeckBuilder state) {
 
         this.gameState = state;
+        SetHeader("Decks");
         ClearCollectionViewPorts();
 
-        var deckRecords = gameData.GetAllDatabaseDeckRecords();;
+        var deckRecords = gameData.GetAllDatabaseDeckRecords();
 
         foreach (var record in deckRecords) {
 
@@ -34,11 +46,26 @@ public class CollectionViewport : MonoBehaviour {
             var deckPreview = Instantiate(deckPreviewPrefab, viewport_Decks).GetComponent<DeckPreview>();
             deckPreview.Init(runtimeDeck, this.gameState);
         }
-    }
 
+        if (deckRecords.Count < 10) {
+            var prefab = Instantiate(addNewDeckPrefab, viewport_Decks);
+            prefab.GetComponent<AddNewDeck>().Init(this);
+        }
+    }
+    public void ShowCards () {
+
+        this.anim.Play("DeckBuilder_CollectionViewPort_FadeIn");
+
+        foreach (var card in gameData.GetAllCards()) {
+            Instantiate(collectionElementPrefab, viewport_Cards).GetComponent<CollectionElement>().Init(card);
+        }
+    }
     public void ClearCollectionViewPorts () {
 
         foreach (Transform t in viewport_Decks) Destroy(t.gameObject);
         foreach (Transform t in viewport_Cards) Destroy(t.gameObject);
+    }
+    private void SetHeader (string text) {
+        heading.text = text;
     }
 }
