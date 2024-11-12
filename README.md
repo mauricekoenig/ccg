@@ -3,7 +3,7 @@
 
 <h3>Home</h3>
 
-![screenshot1 game](homescreen.png)
+![screenshot1 game](scene_transition.gif)
 
 <h3>Gameplay (Updated)</h3>
 
