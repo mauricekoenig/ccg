@@ -5,6 +5,10 @@
 
 ![screenshot1 game](scene_transition.gif)
 
+<h3>Improved</h3>
+
+![screenshot1 game](gif_collection.gif)
+
 <h3>Gameplay (Updated)</h3>
 
 ![screenshot2 game](screen_gameplay2.png)
