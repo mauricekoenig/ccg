@@ -17,6 +17,7 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
     public event Action<DeckPreview> OnClickedOnDeckPreview;
     public event Action<GameState_DeckBuilder> OnDeckBuilderEntered;
     public event Action OnClickedOnBackToDeckPreviewArrow;
+    public event Action<CollectionElement> OnClickedOnCollectionElement;
 
     private void Awake() {
 
@@ -47,6 +48,10 @@ public class DeckBuilder : MonoBehaviour, IDeckBuilder
 
             case GameState_DeckBuilder_ChangeReason.Input_ClickedOnBackToDeckPreviewArrow:
                 OnDeckBuilderEntered?.Invoke(this.GetGameState());
+                break;
+
+            case GameState_DeckBuilder_ChangeReason.Input_ClickedOnCollectionElement:
+                OnClickedOnCollectionElement?.Invoke(data.collectionElement);
                 break;
         }
     }

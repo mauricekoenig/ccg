@@ -11,4 +11,5 @@ public interface IDeckBuilder {
     event Action<GameState_DeckBuilder_ChangeData> OnClickedOnVillain;
     event Action<DeckPreview> OnClickedOnDeckPreview;
     event Action OnClickedOnBackToDeckPreviewArrow;
+    event Action<CollectionElement> OnClickedOnCollectionElement;
 }

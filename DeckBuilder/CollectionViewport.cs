@@ -1,6 +1,7 @@
 ﻿
 
 
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ public class CollectionViewport : MonoBehaviour {
     public void AddNewDeck () {
 
         ClearCollectionViewPorts();
+        // show villains.
+
     }
 
     public void ShowVillains () {
@@ -56,8 +59,10 @@ public class CollectionViewport : MonoBehaviour {
 
         this.anim.Play("DeckBuilder_CollectionViewPort_FadeIn");
 
-        foreach (var card in gameData.GetAllCards()) {
-            Instantiate(collectionElementPrefab, viewport_Cards).GetComponent<CollectionElement>().Init(card);
+        var ordered = gameData.GetAllCards().OrderBy(card => card.Cost.ToString());
+
+        foreach (var card in ordered) {
+            Instantiate(collectionElementPrefab, viewport_Cards).GetComponent<CollectionElement>().Init(card, gameState);
         }
     }
     public void ClearCollectionViewPorts () {

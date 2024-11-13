@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public abstract class RuntimeCardData : IIdentifiable {
 
@@ -29,6 +30,15 @@ public abstract class RuntimeCardData : IIdentifiable {
         Effects = new HashSet<BaseEffect>();
     }
 
+    public RuntimeCardData(int id, string name, int cost, Sprite sprite) {
+
+        ID = id;
+        Name = name;
+        Cost = cost;
+        Artwork = sprite;
+        Effects = new HashSet<BaseEffect>();
+    }
+
     public RuntimeCardData (int id, string name, int cost, Sprite artwork, CardRarity rarity, HashSet<BaseEffect> effects) {
 
         ID = id;
@@ -47,4 +57,6 @@ public abstract class RuntimeCardData : IIdentifiable {
     public override string ToString() {
         return this.Name;
     }
+
+    public abstract RuntimeCardData Clone();
 }

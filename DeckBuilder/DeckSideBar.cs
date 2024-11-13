@@ -1,6 +1,9 @@
 ﻿
 
 
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,39 +15,83 @@ public class DeckSideBar : MonoBehaviour {
     [SerializeField] private Transform deckElementParent;
     [SerializeField] private GameObject deckElementPrefab;
     [SerializeField] private GameObject deckSideBar;
-    private DeckPreview deckPreview;
+    private RuntimeCardDeck deck;
     public GameObject navigateBackArrow;
     [SerializeField] private TextMeshProUGUI heading;
+    [SerializeField] private TextMeshProUGUI deckCounterDisplay;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     private Animator anim;
     private GameState_DeckBuilder state;
+    private DeckBuilder deckBuilder;
 
     private void Awake() {
 
         anim = deckSideBar.GetComponent<Animator>();
+        deckBuilder = GetComponent<DeckBuilder>();
     }
 
-    public void Show (DeckPreview deckPreview, GameState_DeckBuilder state) {
+    private void Update() {
+        // REPLACE WITH STATE CHANGE, INSTEAD OF EVERY FRAME
+        if (this.deck == null) return;
+        deckCounterDisplay.text = $"{this.deck.Cards.Count} / 30";
+    }
+    private void Start() {
+
+        deckBuilder.OnClickedOnCollectionElement += Handler_OnClickedOnCollectionElement;
+    }
+
+    private void Handler_OnClickedOnCollectionElement(CollectionElement collectionElement) {
+
+        if (collectionElement == null) return;
+
+        foreach (Transform t in deckElementParent) {
+
+            DeckElement t_Element = t.GetComponent<DeckElement>();
+            if (t_Element.cardsInThisDeckElement[0].ID == collectionElement.cardData.ID) {
+                t_Element.Add(collectionElement.cardData);
+                return;
+            }
+        }
+
+        Instantiate(deckElementPrefab, deckElementParent).GetComponent<DeckElement>().Init(collectionElement.cardData);
+    }
+
+    public void Show (RuntimeCardDeck deck, GameState_DeckBuilder state) {
 
         ClearSideBar();
         this.state = state;
-        this.deckPreview = deckPreview;
+        this.deck = deck;
         SetHeader("Cards");
         this.anim.Play("DeckBuilder_SideBar_FadeIn");
-        villainArtwork.sprite = deckPreview.Deck.Villain.artwork;
-        deckName.text = deckPreview.DeckName;
+        villainArtwork.sprite = this.deck.Villain.artwork;
+        deckName.text = this.deck.Name;
         this.navigateBackArrow.SetActive(true);
 
         ClearDeckElements();
-        CreateDeckElements(this.deckPreview);
+        CreateDeckElements(deck);
     }
-    private void CreateDeckElements (DeckPreview preview) {
 
-        foreach (var card in preview.Deck.Cards) {
 
+    private void CreateDeckElements (RuntimeCardDeck deck) {
+
+        foreach (var card in deck.Cards) {
+
+            bool foundExistingCopy = false;
+            foreach (Transform t in deckElementParent.transform) {
+                var deckElement = t.GetComponent<DeckElement>();
+                if (deckElement.cardsInThisDeckElement[0].ID == card.ID) {
+                    deckElement.Add(card);
+                    foundExistingCopy = true;
+                    break;
+                }
+            }
+
+            if (foundExistingCopy) continue;
             Instantiate(deckElementPrefab, deckElementParent).GetComponent<DeckElement>().Init(card);
         }
     }
+
     private void ClearDeckElements () {
 
         foreach (Transform t in deckElementParent) Destroy(t.gameObject);

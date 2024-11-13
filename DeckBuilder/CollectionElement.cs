@@ -12,12 +12,14 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
     [SerializeField] private TextMeshProUGUI attack;
     [SerializeField] private TextMeshProUGUI health;
     [SerializeField] private TextMeshProUGUI cardName;
+    private GameState_DeckBuilder state;
 
-    private RuntimeCardData cardData;
+    public RuntimeCardData cardData;
 
-    public void Init (RuntimeCardData data) {
+    public void Init (RuntimeCardData data, GameState_DeckBuilder state) {
 
         this.cardData = data;
+        this.state = state;
 
         if (data is CreatureRuntimeCardData) {
 
@@ -41,6 +43,8 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData) {
 
-        Debug.Log("Clicked on: " + this.cardData.Name);
+        var changeData = Utils.GetDeckBuilderChangeData();
+        changeData.collectionElement = this;
+        this.state.Invoke_GameStateChanged(GameState_DeckBuilder_ChangeReason.Input_ClickedOnCollectionElement, changeData);
     }
 }

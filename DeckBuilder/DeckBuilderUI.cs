@@ -41,12 +41,13 @@ public class DeckBuilderUI : MonoBehaviour {
     }
     private void Handler_OnClickedOnVillain(GameState_DeckBuilder_ChangeData data) {
 
-
+        RuntimeCardDeck deck = new RuntimeCardDeck("New Deck", new List<RuntimeCardData>(), data.villain);
     }
+
     private void Handler_OnClickedOnDeckPreview (DeckPreview deckPreview) {
 
         collectionViewport.ClearCollectionViewPorts();
-        deckSideBar.Show(deckPreview, this.gameState);
+        deckSideBar.Show(deckPreview.Deck, this.gameState);
         collectionViewport.ShowCards();
     }
 

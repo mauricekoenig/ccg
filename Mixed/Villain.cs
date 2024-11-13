@@ -12,6 +12,7 @@ public class Villain : ScriptableObject, IIdentifiable {
     public string Name;
     public int health;
     public Sprite artwork;
+    public string cardText;
 
     public BaseVillainAbility ability;
 
