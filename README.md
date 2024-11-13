@@ -3,7 +3,11 @@
 
 <h3>Home</h3>
 
-![screenshot1 game](homescreen.png)
+![screenshot1 game](scene_transition.gif)
+
+<h3>Improved</h3>
+
+![screenshot1 game](gif_collection.gif)
 
 <h3>Gameplay (Updated)</h3>
 
@@ -12,6 +16,17 @@
 <h3>Gameplay (simplified)</h3>
 
 ![screenshot2 game](screen.png)
+
+
+<h3>Deck Editor - Villain Selection (Updated)</h3>
+
+![screenshot2 game](screen_deckbuilder3.png)
+
+
+<h3>Deck Editor - Collection (Updated)</h3>
+
+![screenshot2 game](screen_deckbuilder4.png)
+
 
 <h3>Deck Editor (simplified)</h3>
 

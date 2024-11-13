@@ -8,45 +8,51 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(DeckSideBar))]
+[RequireComponent(typeof(CollectionViewport))]
 
 public class DeckBuilderUI : MonoBehaviour {
 
-    IDeckBuilder deckBuilder;
+    private IDeckBuilder deckBuilder;
+    private DeckSideBar deckSideBar;
+    private CollectionViewport collectionViewport;
 
-    [SerializeField] private TMP_InputField deck_Name;
-    [SerializeField] private Image deck_VillainArtwork;
 
-    [SerializeField] private Transform cardView_Collection_Parent;
-    [SerializeField] private GameObject cardView_Collection_Prefab;
-    [SerializeField] private GameObject cardViewVillain_Collection_Prefab;
-
-    [SerializeField] private TextMeshProUGUI heading;
+    [SerializeField] private GameData gameData;
+    private GameState_DeckBuilder gameState;
 
     private void Awake() {
+
         deckBuilder = GetComponent<DeckBuilder>();
+        deckSideBar = GetComponent<DeckSideBar>();
+        collectionViewport = GetComponent<CollectionViewport>();
     }
     private void Start() {
-        deckBuilder.OnVillainDataReceived += Handler_OnVillainDataReceived;
+
         deckBuilder.OnClickedOnVillain += Handler_OnClickedOnVillain;
+        deckBuilder.OnClickedOnDeckPreview += Handler_OnClickedOnDeckPreview;
+        deckBuilder.OnDeckBuilderEntered += Handler_OnDeckBuilderEntered;
     }
 
+    private void Handler_OnDeckBuilderEntered (GameState_DeckBuilder state) {
+
+        this.gameState = state;
+        this.collectionViewport.ShowDecks(state);
+    }
     private void Handler_OnClickedOnVillain(GameState_DeckBuilder_ChangeData data) {
 
-        deck_VillainArtwork.sprite = data.villain.artwork;
-        deck_Name.text = $"New {data.villain.Name} Deck";
+        RuntimeCardDeck deck = new RuntimeCardDeck("New Deck", new List<RuntimeCardData>(), data.villain);
     }
 
-    private void Handler_OnVillainDataReceived (HashSet<Villain> villains, GameState_DeckBuilder state) {
+    private void Handler_OnClickedOnDeckPreview (DeckPreview deckPreview) {
 
-        Debug.Log(villains.Count);
-
-        foreach (var card in villains) {
-            var villainView = Instantiate (cardViewVillain_Collection_Prefab, cardView_Collection_Parent);
-            villainView.GetComponent<CardViewVillain_Collection>().Init(card, state);
-        }
+        collectionViewport.ClearCollectionViewPorts();
+        deckSideBar.Show(deckPreview.Deck, this.gameState);
+        collectionViewport.ShowCards();
     }
 
     public void ChangeScene (int buildIndex) {
         SceneManager.LoadScene(buildIndex);
     }
+
 }

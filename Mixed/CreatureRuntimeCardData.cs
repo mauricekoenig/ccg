@@ -15,8 +15,18 @@ public class CreatureRuntimeCardData : RuntimeCardData {
         Attack = attack;
         Health = health;
     }
+    public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health) : base(id, name, cost, artwork) {
+
+        Attack = attack;
+        Health = health;
+    }
 
     public override string ToString() {
         return $"Name: {this.Name}, Cost: {this.Cost}";
+    }
+
+    public override RuntimeCardData Clone() {
+
+        return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health);
     }
 }

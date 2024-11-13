@@ -18,7 +18,12 @@ public class VillainUI : MonoBehaviour, IPointerDownHandler {
 
         this.data = data;
         artworkHolder.sprite = data.artwork;
-        abilityCost.text = data.ability.cost.ToString();
+
+        if (data.ability == null) {
+            abilityCost.text = "-1";
+        }
+
+        else abilityCost.text = data.ability.cost.ToString();
         this.gameState = state;
     }
 
