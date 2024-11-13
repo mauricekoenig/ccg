@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
 using UnityEngine;
@@ -43,11 +44,14 @@ public static class Utils {
         var segments = deckCode.Split('#', StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var segment in segments) {
+
             segment.Trim();
             if (segment.Length < 3) continue;
 
-            bool canParseId = int.TryParse(segment[0].ToString(), out int id);
-            bool canParseQuantity = int.TryParse(segment[2].ToString(), out int quantity);
+            string[] digits = segment.Split('=');
+
+            bool canParseId = int.TryParse(digits[0], out int id);
+            bool canParseQuantity = int.TryParse(digits[1], out int quantity);
 
             if (!canParseId || !canParseQuantity) {
                 Debug.LogWarning("Invalid deck code format.");
@@ -56,9 +60,10 @@ public static class Utils {
 
             for (int i = 0; i < quantity; i++)
                 cards.Add(gameData.GetCardById(id));
-        }
 
-        return new RuntimeCardDeck(deckRecord.DeckName, cards, villain);
+        }
+            return new RuntimeCardDeck(deckRecord.DeckName, cards, villain);
     } 
+
 
 }

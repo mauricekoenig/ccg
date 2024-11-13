@@ -27,6 +27,11 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
 
     private void Handler_OnVillainAbilityClicked(GameState state, Villain villain) {
 
+        if (villain.ability == null) {
+            Debug.Log("No ability set! VillainAbility is null!");
+            return;
+        }
+
         if (state.ActivePlayer.CurrentMana < villain.ability.cost) return;
 
         switch (villain.ability.type) {

@@ -35,6 +35,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     internal IEffectManager effectManager;
     internal IUIManager uiManager;
     internal IVillainAbilityManager villainAbilityManager;
+    internal IPreLoader preLoader;
 
     public event Action<GameState> OnStartOfTurn;
     public event Action<GameState> OnEndOfTurn;
@@ -55,6 +56,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         cardViewManager = GetComponent<CardViewManager>();
         uiManager = GetComponent<IUIManager>();
         villainAbilityManager = GetComponent<IVillainAbilityManager>();
+        preLoader = GetComponent<IPreLoader>();
     }
 
     private void Start () {
@@ -77,6 +79,17 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     public void StartGame () {
 
         if (gameStarted) return;
+
+        if (!RuntimeGameData.Initialized) {
+            gameData.Init();
+
+            preLoader.Run(PreLoaderAction.LoadAllCreatures);
+            preLoader.Run(PreLoaderAction.LoadAllEffects);
+            preLoader.Run(PreLoaderAction.LoadAllVillains);
+            preLoader.Run(PreLoaderAction.LoadAllCardSprites);
+            preLoader.Run(PreLoaderAction.LoadAllDecks);
+            RuntimeGameData.Initialized = true;
+        }
 
         testDeck1 = gameData.runtimeGameData.GetTestDeck();
         testDeck2 = gameData.runtimeGameData.GetTestDeck();
