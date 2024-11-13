@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class RuntimeGameData {
 
@@ -34,6 +35,9 @@ public class RuntimeGameData {
     }
     public HashSet<RuntimeCardData> GetAllCards() {
         return allCards;
+    }
+    public CreatureRuntimeCardData GetCreatureById (int id) {
+        return allCreatures.Where(x => x.ID == id).FirstOrDefault();
     }
 
     public HashSet<Villain> GetAllVillains() {

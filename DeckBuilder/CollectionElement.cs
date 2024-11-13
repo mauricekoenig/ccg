@@ -12,6 +12,7 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
     [SerializeField] private TextMeshProUGUI attack;
     [SerializeField] private TextMeshProUGUI health;
     [SerializeField] private TextMeshProUGUI cardName;
+    [SerializeField] private TextMeshProUGUI cardText;
     [SerializeField] private GameObject grayOut;
 
     private GameState_DeckBuilder state;
@@ -32,6 +33,7 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
             this.cost.text = creature.Cost.ToString();
             this.attack.text = creature.Attack.ToString();
             this.health.text = creature.Health.ToString();
+            this.cardText.text = creature.GetKeywordString();
         }
 
         else {

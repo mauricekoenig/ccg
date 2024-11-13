@@ -85,6 +85,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
             preLoader.Run(PreLoaderAction.LoadAllCreatures);
             preLoader.Run(PreLoaderAction.LoadAllEffects);
+            preLoader.Run(PreLoaderAction.LoadAllKeywordAssociations);
             preLoader.Run(PreLoaderAction.LoadAllVillains);
             preLoader.Run(PreLoaderAction.LoadAllCardSprites);
             preLoader.Run(PreLoaderAction.LoadAllDecks);

@@ -4,9 +4,13 @@
 
 using UnityEngine;
 
-public abstract class Keyword : ScriptableObject {
+public abstract class Keyword : ScriptableObject, IIdentifiable {
 
-    public string Name;
+    [SerializeField] private int id;
+    [SerializeField] private KeywordType type;
 
-    public abstract void Apply();
+    public int ID => id;
+    public KeywordType Type => type;
+
+    public abstract void Apply (CreatureRuntimeCardData creatureData);
 }
