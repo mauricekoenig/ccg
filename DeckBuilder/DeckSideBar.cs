@@ -4,6 +4,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,11 +51,13 @@ public class DeckSideBar : MonoBehaviour {
             DeckElement t_Element = t.GetComponent<DeckElement>();
             if (t_Element.cardsInThisDeckElement[0].ID == collectionElement.cardData.ID) {
                 t_Element.Add(collectionElement.cardData);
+                OrderDeckElementsByCost();
                 return;
             }
         }
 
         Instantiate(deckElementPrefab, deckElementParent).GetComponent<DeckElement>().Init(collectionElement.cardData);
+        OrderDeckElementsByCost();
     }
 
     public void Show (RuntimeCardDeck deck, GameState_DeckBuilder state) {
@@ -90,6 +93,9 @@ public class DeckSideBar : MonoBehaviour {
             if (foundExistingCopy) continue;
             Instantiate(deckElementPrefab, deckElementParent).GetComponent<DeckElement>().Init(card);
         }
+
+        Debug.Log("Ha!");
+        OrderDeckElementsByCost();
     }
 
     private void ClearDeckElements () {
@@ -112,5 +118,33 @@ public class DeckSideBar : MonoBehaviour {
     }
     private void SetHeader (string text) {
         this.heading.text = text;
+    }
+    
+    private void OrderDeckElementsByCost () {
+        if (deckElementParent.childCount == 0 || deckElementParent.childCount == 1 ) return;
+
+        List<DeckElement> elements = new();
+
+        foreach (Transform t in deckElementParent) {
+
+            DeckElement de = t.GetComponent<DeckElement>();
+
+            if (de == null) {
+                Debug.Log("DeckElement is null.");
+                continue;
+            }
+
+            elements.Add(de);
+        }
+
+        elements = elements.OrderBy(x => x.cardsInThisDeckElement[0].Cost).ToList();
+        for (int i = 0; i < elements.Count; i++) {
+            elements[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    public void Foobar() {
+        OrderDeckElementsByCost();
+        Debug.Log("Eyo!");
     }
 }

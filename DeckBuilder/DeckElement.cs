@@ -13,11 +13,8 @@ public class DeckElement : MonoBehaviour, IPointerDownHandler
     public TextMeshProUGUI quantityUI;
     public TextMeshProUGUI cardName;
 
-
     public GameObject prefab;
     public GameObject clone;
-
-    Canvas canvas;
 
     public void Init (RuntimeCardData cardData) {
 
@@ -25,7 +22,7 @@ public class DeckElement : MonoBehaviour, IPointerDownHandler
         this.cardName.text = cardData.Name;
         this.cost.text = cardData.Cost.ToString();
         quantityUI.text = cardsInThisDeckElement.Count.ToString();
-        canvas = FindFirstObjectByType<Canvas>();
+        this.gameObject.name = "DeckElement: " + cardData.Name;
     }
 
     public void Add (RuntimeCardData cardData) {
