@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      screen_deckbuilder3_0: 5553448501301589460
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
