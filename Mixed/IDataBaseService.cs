@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 public interface IDataBaseService {
 
     void SelectAllCreatures ();
+    void SelectAllDecks();
+
     event Action <HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
+    event Action<HashSet<DatabaseDeckRecord>> OnSelectAllDecks;
 
 }

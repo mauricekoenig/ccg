@@ -12,11 +12,51 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
     [SerializeField] private string connectionString;
 
     public event Action<HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
+    public event Action<HashSet<DatabaseDeckRecord>> OnSelectAllDecks;
 
     void Awake () {
 
         string dbPath = Application.streamingAssetsPath + "/tcg.db";
         connectionString = $"Data Source={dbPath}";
+    }
+
+    public void SelectAllDecks () {
+
+        try {
+
+            HashSet<DatabaseDeckRecord> set = new();
+
+            using (var dbConnection = new SQLiteConnection(connectionString)) {
+
+                dbConnection.Open();
+                var query = $"SELECT * FROM Decks";
+
+                using (IDbCommand dbCommand = dbConnection.CreateCommand()) {
+
+                    dbCommand.CommandText = query;
+
+                    using (IDataReader reader = dbCommand.ExecuteReader()) {
+
+                        while (reader.Read()) {
+
+                            int villainId = reader.GetInt32(reader.GetOrdinal("villain_id"));
+                            string deckCode = reader.GetString(reader.GetOrdinal("code"));
+                            string deckName = reader.GetString(reader.GetOrdinal("name"));
+
+                            DatabaseDeckRecord deckMetaData = new DatabaseDeckRecord(villainId, deckCode, deckName);
+
+                            set.Add(deckMetaData);
+                        }
+
+                        OnSelectAllDecks?.Invoke(set);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+            Debug.LogError($"Error while fetching decks: {ex.Message}");
+        }
+
     }
 
     public void SelectAllCreatures() {

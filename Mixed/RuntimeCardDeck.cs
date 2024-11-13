@@ -19,4 +19,12 @@ public class RuntimeCardDeck : ICardDeck {
         this.cards = cards;
         this.villain = villain;
     }
+
+    public void AddCard (RuntimeCardData card) {
+        this.cards.Add (card);
+    }
+
+    public void RemoveCard (RuntimeCardData card) {
+        this.cards.Remove(card);
+    }
 }

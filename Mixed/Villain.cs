@@ -6,12 +6,15 @@ using UnityEngine;
 
 [CreateAssetMenu]
 
-public class Villain : ScriptableObject {
+public class Villain : ScriptableObject, IIdentifiable {
 
+    public int id;
     public string Name;
     public int health;
     public Sprite artwork;
+    public string cardText;
 
     public BaseVillainAbility ability;
 
+    public int ID => id;
 }

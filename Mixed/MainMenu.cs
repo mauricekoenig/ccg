@@ -31,6 +31,7 @@ public class MainMenu : MonoBehaviour {
         preLoader.Run(PreLoaderAction.LoadAllEffects);
         preLoader.Run(PreLoaderAction.LoadAllVillains);
         preLoader.Run(PreLoaderAction.LoadAllCardSprites);
+        preLoader.Run(PreLoaderAction.LoadAllDecks);
     }
 
     public void ChangeScene (int buildIndex) {
