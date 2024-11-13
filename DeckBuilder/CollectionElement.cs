@@ -12,7 +12,10 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
     [SerializeField] private TextMeshProUGUI attack;
     [SerializeField] private TextMeshProUGUI health;
     [SerializeField] private TextMeshProUGUI cardName;
+    [SerializeField] private GameObject grayOut;
+
     private GameState_DeckBuilder state;
+    private bool grayedOut;
 
     public RuntimeCardData cardData;
 
@@ -43,8 +46,14 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData) {
 
+        if (grayedOut) return;
         var changeData = Utils.GetDeckBuilderChangeData();
         changeData.collectionElement = this;
         this.state.Invoke_GameStateChanged(GameState_DeckBuilder_ChangeReason.Input_ClickedOnCollectionElement, changeData);
+    }
+
+    public void GrayOut () {
+        this.grayOut.SetActive(true);
+        this.grayedOut = true;
     }
 }

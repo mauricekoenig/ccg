@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,25 +17,26 @@ public class DeckElement : MonoBehaviour, IPointerDownHandler
     public GameObject prefab;
     public GameObject clone;
 
-    public void Init (RuntimeCardData cardData) {
+    CollectionElement collectionElement;
+
+    public void Init (RuntimeCardData cardData, CollectionElement collectionElement = null) {
 
         Add(cardData);
         this.cardName.text = cardData.Name;
         this.cost.text = cardData.Cost.ToString();
         quantityUI.text = cardsInThisDeckElement.Count.ToString();
+        if (collectionElement != null) this.collectionElement = collectionElement;
         this.gameObject.name = "DeckElement: " + cardData.Name;
     }
 
     public void Add (RuntimeCardData cardData) {
 
         if (cardsInThisDeckElement.Count == 2) {
-            Debug.Log("FULL!");
             return;
         }
 
         if (cardsInThisDeckElement.Count == 0) {
 
-            Debug.Log("EMPTY!");
             cardsInThisDeckElement.Add(cardData);
             quantityUI.text = cardsInThisDeckElement.Count.ToString();
             return;
@@ -42,7 +44,6 @@ public class DeckElement : MonoBehaviour, IPointerDownHandler
 
         if (cardData.ID != cardsInThisDeckElement[0].ID) return;
 
-        Debug.Log("HAS SPACE!");
         cardsInThisDeckElement.Add (cardData);
         quantityUI.text = cardsInThisDeckElement.Count.ToString();
     }

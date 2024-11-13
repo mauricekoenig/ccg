@@ -27,7 +27,6 @@ public class PlayerCards : MonoBehaviour {
 
     public void Init (ICardDeck deck) {
 
-        Debug.Log("DECK COUNT: " + deck.Cards.Count);
         ClearAllZones();
         this.cardDeck = deck;
         this.deck.AddRange(deck.Cards);

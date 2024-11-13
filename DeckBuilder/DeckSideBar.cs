@@ -51,6 +51,7 @@ public class DeckSideBar : MonoBehaviour {
             DeckElement t_Element = t.GetComponent<DeckElement>();
             if (t_Element.cardsInThisDeckElement[0].ID == collectionElement.cardData.ID) {
                 t_Element.Add(collectionElement.cardData);
+                collectionElement.GrayOut();
                 OrderDeckElementsByCost();
                 return;
             }
@@ -63,16 +64,19 @@ public class DeckSideBar : MonoBehaviour {
     public void Show (RuntimeCardDeck deck, GameState_DeckBuilder state) {
 
         ClearSideBar();
+        SetHeader("Cards");
+
         this.state = state;
         this.deck = deck;
-        SetHeader("Cards");
+
         this.anim.Play("DeckBuilder_SideBar_FadeIn");
         villainArtwork.sprite = this.deck.Villain.artwork;
         deckName.text = this.deck.Name;
         this.navigateBackArrow.SetActive(true);
 
-        ClearDeckElements();
-        CreateDeckElements(deck);
+        CreateDeckElements(this.deck);
+
+        Debug.Log("DeckSideBar - SHOW!");
     }
 
 
@@ -107,14 +111,15 @@ public class DeckSideBar : MonoBehaviour {
         anim.Play("DeckBuilder_SideBar_FadeOut");
         this.navigateBackArrow.SetActive(false);
         var changeData = Utils.GetDeckBuilderChangeData();
+        ClearSideBar();
         this.state.Invoke_GameStateChanged(GameState_DeckBuilder_ChangeReason.Input_ClickedOnBackToDeckPreviewArrow, changeData);
     }
 
     private void ClearSideBar() {
 
+        ClearDeckElements();
         villainArtwork.sprite = null;
         deckName.text = string.Empty;
-        ClearDeckElements();
     }
     private void SetHeader (string text) {
         this.heading.text = text;
@@ -143,8 +148,5 @@ public class DeckSideBar : MonoBehaviour {
         }
     }
 
-    public void Foobar() {
-        OrderDeckElementsByCost();
-        Debug.Log("Eyo!");
-    }
+
 }
