@@ -7,13 +7,23 @@ using UnityEngine.UI;
 
 public class CollectionElement : MonoBehaviour, IPointerDownHandler
 {
-    public Image Artwork;
+
     [SerializeField] private TextMeshProUGUI cost;
-    [SerializeField] private TextMeshProUGUI attack;
-    [SerializeField] private TextMeshProUGUI health;
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI cardText;
+    [SerializeField] private TextMeshProUGUI typePlate;
     [SerializeField] private GameObject grayOut;
+
+    // Creature specific
+    [SerializeField] private GameObject creatureArtwork_GameObject;
+    [SerializeField] private Image creatureArtwork;
+    [SerializeField] private TextMeshProUGUI attack;
+    [SerializeField] private TextMeshProUGUI health;
+
+    [SerializeField] private GameObject spellArtwork_GameObject;
+    [SerializeField] private Image spellArtwork;
+
+
 
     private GameState_DeckBuilder state;
     private bool grayedOut;
@@ -25,24 +35,31 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
         this.cardData = data;
         this.state = state;
 
+        this.cardName.text = data.Name;
+        this.cost.text = data.Cost.ToString();
+
         if (data is CreatureRuntimeCardData) {
 
+            spellArtwork_GameObject.SetActive(false);
+            creatureArtwork_GameObject.SetActive(true);
             var creature = (CreatureRuntimeCardData)data;
-            this.cardName.text = creature.Name;
-            Artwork.sprite = creature.Artwork;
-            this.cost.text = creature.Cost.ToString();
+            creatureArtwork.sprite = creature.Artwork;
             this.attack.text = creature.Attack.ToString();
             this.health.text = creature.Health.ToString();
             this.cardText.text = creature.GetKeywordString();
+            typePlate.text = "Creature"; // Need adjustments
         }
 
         else {
 
-            this.cardName.text = data.Name;
-            Artwork.sprite = data.Artwork;
-            this.cost.text = data.Cost.ToString();
+            creatureArtwork_GameObject.SetActive(true);
+            spellArtwork_GameObject.SetActive(true);
+            var spell = (SpellRuntimeCardData)data;
+            spellArtwork.sprite = data.Artwork;
             this.attack.text = data.Cost.ToString();
             this.health.text = data.Cost.ToString();
+            this.cardText.text = "My Spell Text";
+            this.typePlate.text = "Spell";
         }
     }
 

@@ -24,7 +24,7 @@ public class CollectionViewport : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI heading;
 
     [SerializeField] private Animator anim;
-    [SerializeField] private DeckSideBar deckSideBar;
+     private DeckSideBar deckSideBar;
 
     private void Awake() {
         this.deckSideBar = GetComponent<DeckSideBar>();
