@@ -122,7 +122,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         RuntimeCardData data = turnManager.ActivePlayer.DrawCard();
         Invoke_GameStateChanged();
-        Invoke_OnPlayerDrawCard(data, turnManager.ActivePlayer.ID);
+        OnPlayerDrawCard?.Invoke(GetGameState(), data, turnManager.ActivePlayer.ID);
     }
     public void DiscardRandomCard () {
 
@@ -176,37 +176,8 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         OnGameStateChanged?.Invoke(this.gameState);
     }
-    public void Invoke_OnPlayerDrawCard (RuntimeCardData data, int playerID) {
-        OnPlayerDrawCard?.Invoke(GetGameState(), data, playerID);
-    }
-    public void Invoke_OnCardPlayedFromHand (CardView3D cardView) {
 
-        OnCardPlayedFromHand?.Invoke(GetGameState(), cardView);
-    }
-    public void Invoke_ReturnCardFromBoardToHand(CardView3D cardView) {
-
-        OnCardReturnedToHand?.Invoke(GetGameState(), cardView);
-    }
-    public void Invoke_OnFindEffectTriggered (CardPool pool) {
-
-        OnFindEffectTriggered?.Invoke(GetGameState(), pool);
-    }
-    public void Invoke_OnCardInFindWindowSelected (RuntimeCardData data) {
-
-        OnCardInFindWindowSelected?.Invoke(GetGameState(), data);
-    }
-    public void Invoke_OnVillainAbilityClicked (Villain villain) {
-        OnVillainAbilityClicked?.Invoke(GetGameState(), villain);
-    }
-    public void Invoke_OnStartOfTurn () {
-
-        OnStartOfTurn?.Invoke(GetGameState());
-    }
-    public void Invoke_OnEndOfTurn() {
-        OnEndOfTurn?.Invoke(GetGameState());
-    }
-
-    // EVENT HANDLER
+    // HANDLER - CardView 3D
     public void Handler_LeftClickedCardView (CardView3D cardView) {
 
         cardView.Interact(GetGameState(), InputAction.LeftMouse);
@@ -229,10 +200,10 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
     // HANDLER - TurnManager
     public void Handler_OnStartOfTurn () {
-        Invoke_OnStartOfTurn();
+        OnStartOfTurn?.Invoke(GetGameState());
     }
     public void Handler_OnEndOfTurn() {
-        Invoke_OnEndOfTurn();
+        OnEndOfTurn?.Invoke(GetGameState());
     }
     public void Handler_OnCardDraw (RuntimeCardData cardRuntimeData, int id) {
         Invoke_OnPlayerDrawCard(cardRuntimeData, id);
@@ -246,34 +217,35 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         effectManager.Handle(cardView.data);
     }
+
     // HANDLER - VillainAbilityManager
     public void Handler_OnVillainAbilityHandled () {
         Invoke_GameStateChanged();
     }
 
-    // GameState
+    // HANDLER - GameState
     public void HandleInternalGameStateChange (GameStateChangeReason change, GameStateChangeData data) {
 
         switch (change) {
 
             case GameStateChangeReason.Action_PlayedCardFromHand:
-                Invoke_OnCardPlayedFromHand(data.affectedView);
+                OnCardPlayedFromHand?.Invoke(GetGameState(), data.affectedView);
                 break;
 
             case GameStateChangeReason.Action_ReturnedCardFromBoardToHand:
-                Invoke_ReturnCardFromBoardToHand(data.affectedView);
+                OnCardReturnedToHand?.Invoke(GetGameState(), data.affectedView);
                 break;
 
             case GameStateChangeReason.EffectActivated_FindCards:
-                Invoke_OnFindEffectTriggered(data.cardPool);
+                OnFindEffectTriggered?.Invoke(GetGameState(), data.cardPool);
                 break;
 
             case GameStateChangeReason.Input_ClickedOnCardInFindWindow:
-                Invoke_OnCardInFindWindowSelected(data.cardData);
+                OnCardInFindWindowSelected?.Invoke(GetGameState(), data.cardData);
                 break;
 
             case GameStateChangeReason.Input_ClickedOnVillainAbility:
-                Invoke_OnVillainAbilityClicked(data.villain);
+                OnVillainAbilityClicked?.Invoke(GetGameState(), data.villain);
                 break;
         }
 
