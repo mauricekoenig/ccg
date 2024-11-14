@@ -53,10 +53,10 @@ public class CardViewManager : MonoBehaviour {
         cardView.SetInteractionLogic(new CardInteraction_Play(cardView));*/
 
         Transform boardView = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
-        Instantiate(cardView_OnBoard_Prefab, boardView);
-        cardView.SetInteractionBehaviour(new CardInteraction_Play(cardView));
+        ICardView view = Instantiate(cardView_OnBoard_Prefab, boardView).GetComponent<ICardView>();
+        view.Init(state, cardView.Data, new CardInteraction_Play(view));
 
-        cardView.Transform.SetParent(cardView.Transform.root);
+        cardView.Transform.SetParent(cardView.Transform.root); 
         Destroy(cardView.Transform.gameObject);
 
         UpdateHand (state.ActivePlayer.ID);

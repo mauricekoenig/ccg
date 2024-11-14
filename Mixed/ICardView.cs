@@ -11,4 +11,5 @@ public interface ICardView {
     void SetZone (CardZone zone);
     void Interact (GameState state, InputAction action);
     void SetInteractionBehaviour (ICardInteraction cardInteraction);
+    void Init(GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic);
 }

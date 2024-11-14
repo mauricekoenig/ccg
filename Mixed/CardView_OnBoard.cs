@@ -16,6 +16,7 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
 
     private ICardInteraction interactionLogic;
 
+    private GameState gameState;
     public Transform Transform => this.transform;
     public RuntimeCardData Data => this.data;
 
@@ -25,9 +26,30 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
         this.interactionLogic = GetComponent<ICardInteraction>();
     }
 
-    public void Init(RuntimeCardData data) {
+    public void Init(GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic) {
 
+        this.gameState = gameState;
         this.data = data;
+        this.interactionLogic = interactionLogic;
+
+        if (data == null) {
+            Debug.Log("Data is null!");
+            return;
+        }
+
+        this.gameState = gameState;
+        this.data = data;
+        artwork.sprite = data.Artwork;
+
+        if (data is CreatureRuntimeCardData) {
+
+            CreatureRuntimeCardData crd = data as CreatureRuntimeCardData;
+            attackTmp.text = crd.Attack.ToString();
+            healthTmp.text = crd.Health.ToString();
+        }
+
+
+        this.interactionLogic = interactionLogic;
     }
 
     public void Interact (GameState state, InputAction action) {
@@ -60,4 +82,5 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
 
         this.zone = zone;
     }
+
 }
