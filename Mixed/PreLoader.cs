@@ -2,6 +2,7 @@
 
 
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ public class PreLoader : MonoBehaviour, IPreLoader {
         if (RuntimeGameData.Initialized) return;
         this.databaseService.OnSelectAllCreatures += Handler_OnSelectAllCreatures;
         this.databaseService.OnSelectAllDecks += Handler_OnSelectAllDecks;
+        this.databaseService.OnSelectAllKeywordAssociations += Handler_OnSelectAllKeywordAssociations;
     }
 
     public void Run (PreLoaderAction action) {
@@ -46,6 +48,10 @@ public class PreLoader : MonoBehaviour, IPreLoader {
                 databaseService.SelectAllDecks();
                 break;
 
+            case PreLoaderAction.LoadAllKeywordAssociations:
+                databaseService.SelectAllKeywordsAssociations();
+                break;
+
         }
     }
 
@@ -58,6 +64,11 @@ public class PreLoader : MonoBehaviour, IPreLoader {
 
         gameData.runtimeGameData.AssignDatabaseDeckRecords(metaData);
     }
+
+    private void Handler_OnSelectAllKeywordAssociations(Dictionary<int, HashSet<int>> dictionary) {
+
+        gameData.AssignKeywords(dictionary);
+    }
 }
 
 public enum PreLoaderAction {
@@ -66,5 +77,6 @@ public enum PreLoaderAction {
     LoadAllEffects,
     LoadAllCardSprites,
     LoadAllVillains,
-    LoadAllDecks
+    LoadAllDecks,
+    LoadAllKeywordAssociations
 }

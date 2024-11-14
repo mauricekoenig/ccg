@@ -13,6 +13,7 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
 
     public event Action<HashSet<CreatureRuntimeCardData>> OnSelectAllCreatures;
     public event Action<HashSet<DatabaseDeckRecord>> OnSelectAllDecks;
+    public event Action<Dictionary<int, HashSet<int>>> OnSelectAllKeywordAssociations;
 
     void Awake () {
 
@@ -58,7 +59,6 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
         }
 
     }
-
     public void SelectAllCreatures() {
 
         try {
@@ -101,4 +101,44 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
         }
     }
 
+    public void SelectAllKeywordsAssociations() {
+
+        try {
+
+            Dictionary<int, HashSet<int>> keywordAssociations = new();
+
+            using (var dbConnection = new SQLiteConnection(connectionString)) {
+
+                dbConnection.Open();
+                var query = $"SELECT * FROM CreatureKeywords";
+
+                using (IDbCommand dbCommand = dbConnection.CreateCommand()) {
+
+                    dbCommand.CommandText = query;
+
+                    using (IDataReader reader = dbCommand.ExecuteReader()) {
+
+                        while (reader.Read()) {
+
+                            int creatureID = reader.GetInt32(reader.GetOrdinal("CreatureID"));
+                            int keywordID = reader.GetInt32(reader.GetOrdinal("KeywordID"));
+
+                            if (keywordAssociations.ContainsKey(creatureID)) {
+                                keywordAssociations[creatureID].Add(keywordID);
+                                continue;
+                            }
+
+                            keywordAssociations.Add(creatureID, new HashSet<int>() { keywordID});
+                        }
+
+                        OnSelectAllKeywordAssociations?.Invoke(keywordAssociations);
+                    }
+                }
+            }
+        }
+
+        catch (Exception ex) {
+            Debug.Log(ex.Message);
+        }
+    }
 }

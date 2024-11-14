@@ -1,7 +1,6 @@
 ﻿
 
 
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +75,6 @@ public class DeckSideBar : MonoBehaviour {
 
         CreateDeckElements(this.deck);
 
-        Debug.Log("DeckSideBar - SHOW!");
     }
 
 
@@ -98,7 +96,6 @@ public class DeckSideBar : MonoBehaviour {
             Instantiate(deckElementPrefab, deckElementParent).GetComponent<DeckElement>().Init(card);
         }
 
-        Debug.Log("Ha!");
         OrderDeckElementsByCost();
     }
 

@@ -8,7 +8,9 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public int Attack { get; set; }
     public int Health { get; set; }
-    public HashSet<CreatureType> Types { get; set; }
+
+    public HashSet<CreatureType> Types { get; set; } = new();
+    public HashSet<Keyword> Keywords { get; set; } = new();
 
     public CreatureRuntimeCardData (int id, string name, int cost, string artworkBase64, int attack, int health) : base (id, name, cost, artworkBase64) {
 
@@ -28,5 +30,15 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     public override RuntimeCardData Clone() {
 
         return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health);
+    }
+
+    public string GetKeywordString () {
+
+        string s = "";
+        foreach (var keyword in Keywords) {
+            Debug.Log("Keyword: " + keyword.Type.ToString());
+            s += keyword.Type.ToString() + " ";
+        } return s;
+;
     }
 }
