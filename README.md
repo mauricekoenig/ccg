@@ -9,6 +9,11 @@
 
 ![screenshot1 game](gif_collection.gif)
 
+
+<h3>Targeting</h3>
+
+![screenshot1 game](gif_targeting.gif)
+
 <h3>Gameplay (Updated)</h3>
 
 ![screenshot2 game](screen_gameplay2.png)
