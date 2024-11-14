@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class CardInteraction_Hand : ICardInteraction {
 
-    private CardView3D cardView;
+    private ICardView cardView;
 
-    public CardInteraction_Hand(CardView3D view) {
+    public CardInteraction_Hand(ICardView view) {
 
         this.cardView = view;
         this.cardView.SetZone(CardZone.Hand);
@@ -19,10 +19,10 @@ public class CardInteraction_Hand : ICardInteraction {
 
         if (gameState.ActivePlayer.CardsOnBoard > 4) return;
 
-        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.data.Cost) {
+        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.Data.Cost) {
 
-            gameState.ActivePlayer.cards.MoveCardBetweenZones(cardView.data, CardZone.Hand, CardZone.Play);
-            gameState.ActivePlayer.resources.currentMana -= cardView.data.Cost;
+            gameState.ActivePlayer.cards.MoveCardBetweenZones(cardView.Data, CardZone.Hand, CardZone.Play);
+            gameState.ActivePlayer.resources.currentMana -= cardView.Data.Cost;
 
             var changeData = GameStateChangeData.New(gameState);
             changeData.affectedView = this.cardView;

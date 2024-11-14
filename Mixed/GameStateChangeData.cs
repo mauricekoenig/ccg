@@ -4,7 +4,7 @@
 public class GameStateChangeData {
 
     public GameState state;
-    public CardView3D affectedView;
+    public ICardView affectedView;
     public CardPool cardPool;
     public RuntimeCardData cardData;
     public Villain villain;

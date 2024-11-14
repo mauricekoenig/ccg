@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CardView3D : MonoBehaviour
-{
+public class CardView3D : MonoBehaviour, ICardView {
+
     private GameState gameState;
     public SpriteRenderer cost;
     public SpriteRenderer artwork;
@@ -17,6 +17,13 @@ public class CardView3D : MonoBehaviour
     public TextMeshPro nameText;
 
     private ICardInteraction interactionLogic;
+    public Transform Transform => this.transform;
+    public RuntimeCardData Data => this.data;
+
+    public void SetInteractionBehaviour (ICardInteraction interactionLogic) {
+
+        this.interactionLogic = interactionLogic;
+    }
 
     public void ResetView() {
 
@@ -58,9 +65,6 @@ public class CardView3D : MonoBehaviour
 
         viewPosition = zone;
     }
-    public void SetInteractionLogic (ICardInteraction interactionLogic) {
-        this.interactionLogic = interactionLogic;
-    }
 
     public void Interact (GameState state, InputAction action) {
         if (this.interactionLogic == null) return;
@@ -81,11 +85,4 @@ public class CardView3D : MonoBehaviour
         }
     }
 
-}
-
-public enum InputAction {
-
-    LeftMouse,
-    RightMouse,
-    MiddleMouse,
 }

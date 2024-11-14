@@ -6,20 +6,53 @@ using UnityEngine;
 
 public class TargetingManager : MonoBehaviour, ITargetingManager {
 
-    [SerializeField] private CardView3D currentView;
+    private static bool isTargeting;
+    public static bool IsTargeting => isTargeting;
 
-    public event Action<CardView3D> OnStartTargeting;
-    public event Action<CardView3D> OnEndTargeting;
+    [SerializeField] private ICardView currentView;
+    [SerializeField] private GameObject targetArrowPrefab;
+    [SerializeField] private GameObject targetArrowInstance;
+    private TargetArrow targetArrow;
 
-    public void StartTargeting(CardView3D cardView) {
+
+    public event Action<ICardView> OnStartTargeting;
+    public event Action<ICardView> OnEndTargeting;
+
+    void Start () {
+
+       CreateArrowInstance();
+    }
+
+    private void CreateArrowInstance () {
+
+        if (targetArrowPrefab == null) return;
+        this.targetArrowInstance = Instantiate(targetArrowPrefab);
+        this.targetArrow = this.targetArrowInstance.GetComponent<TargetArrow>();
+    }
+
+    public void StartTargeting(ICardView cardView) {
+
+        if (isTargeting) return;
 
         this.currentView = cardView;
-        OnStartTargeting?.Invoke(cardView);
+        this.targetArrowInstance.transform.position = cardView.Transform.position;
+        this.targetArrow.SetOrigin(cardView.Transform.position);
+        this.targetArrowInstance.SetActive(true);
+        isTargeting = true;
 
+        OnStartTargeting?.Invoke(cardView);
     }
+
     public void EndTargeting() {
 
-        OnEndTargeting?.Invoke(this.currentView);
+        if (!isTargeting) return;
+
+        this.targetArrowInstance.SetActive(false);
+        this.targetArrowInstance.transform.position = this.currentView.Transform.position;
+        this.targetArrow.Reset();
         this.currentView = null;
+        isTargeting = false;
+
+        OnEndTargeting?.Invoke(this.currentView);
     }
 }

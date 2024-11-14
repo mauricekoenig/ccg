@@ -3,11 +3,13 @@
 
 
 
+using UnityEngine;
+
 public class CardInteraction_Play : ICardInteraction {
 
-    private CardView3D cardView;
+    private ICardView cardView;
 
-    public CardInteraction_Play(CardView3D view) {
+    public CardInteraction_Play(ICardView view) {
 
         this.cardView = view;
         this.cardView.SetZone(CardZone.Play);
@@ -15,7 +17,15 @@ public class CardInteraction_Play : ICardInteraction {
 
     public void LeftClick (GameState gameState) {
 
-        gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnFriendlyCardInPlay, null);
+        if (TargetingManager.IsTargeting) {
+            Debug.Log("Already targeting!");
+            return;
+        }
+
+
+        var changeData = GameStateChangeData.New(gameState);
+        changeData.affectedView = this.cardView;
+        gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnFriendlyCardInPlay, changeData);
     }
 
     public void RightClick(GameState gameState) {

@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
 
+    [SerializeField] private GameObject cardView_OnBoard_Prefab;
     [SerializeField] private Transform cardViewPoolParent;
     [SerializeField] private Transform handView1;
     [SerializeField] private Transform handView2;
@@ -29,7 +30,7 @@ public class CardViewManager : MonoBehaviour {
     public CardViewManagerLayoutSettings layoutSettings;
     public GameObject cardViewPrefab;
 
-    public event Action<GameState, CardView3D> OnCardMovedToPlayZone;
+    public event Action<GameState, ICardView> OnCardMovedToPlayZone;
 
     private void Awake() {
 
@@ -45,12 +46,18 @@ public class CardViewManager : MonoBehaviour {
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
     }
 
-    private void Handler_OnCardPlayedFromHand (GameState state, CardView3D cardView) {
+    private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
+
+        /*cardView.gameObject.transform.SetParent(boardView);
+        // ANIMATION LOGIC HERE
+        cardView.SetInteractionLogic(new CardInteraction_Play(cardView));*/
 
         Transform boardView = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
-        cardView.gameObject.transform.SetParent(boardView);
-        // ANIMATION LOGIC HERE
-        cardView.SetInteractionLogic(new CardInteraction_Play(cardView));
+        Instantiate(cardView_OnBoard_Prefab, boardView);
+        cardView.SetInteractionBehaviour(new CardInteraction_Play(cardView));
+
+        cardView.Transform.SetParent(cardView.Transform.root);
+        Destroy(cardView.Transform.gameObject);
 
         UpdateHand (state.ActivePlayer.ID);
         UpdateBoard (state.ActivePlayer.ID);
@@ -67,10 +74,10 @@ public class CardViewManager : MonoBehaviour {
         UpdateHand(state.ActivePlayer.ID);
     }
 
-    public void EventHandler_OnCardReturnedToHand (GameState state, CardView3D cardView) {
+    public void EventHandler_OnCardReturnedToHand (GameState state, ICardView cardView) {
 
         Transform handView = state.ActivePlayer.ID == 1 ? handView1 : handView2;
-        cardView.gameObject.transform.SetParent(handView);
+        cardView.Transform.SetParent(handView);
 
         UpdateHand(state.ActivePlayer.ID);
         UpdateBoard(state.ActivePlayer.ID);

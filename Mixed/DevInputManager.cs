@@ -13,11 +13,15 @@ public class DevInputManager : MonoBehaviour, IInputManager {
     public LayerMask cardViewLayer;
     public bool raycast;
 
-    public event Action<CardView3D> ON_LeftClickedCardView;
-    public event Action<CardView3D> ON_RightClickedCardView;
+    public event Action<ICardView> OnLeftClickedCardView;
+    public event Action<ICardView> OnRightClickedCardView;
+    public event Action OnRightClickWhileTargeting;
+    public event Action OnLeftClickWhileTargeting;
+
+    private ICardView lastSelection;
 
     private void Start () {
-
+        
         mainCam = Camera.main;
         mediator = GetComponent<IMediator>();
     }
@@ -27,10 +31,24 @@ public class DevInputManager : MonoBehaviour, IInputManager {
         if (!raycast) return;
 
         if (Input.GetMouseButtonDown(0)) {
+
+            if (TargetingManager.IsTargeting) {
+                Debug.Log("InputManager: LeftClick while targeting.");
+                OnLeftClickWhileTargeting?.Invoke();
+                return;
+            }
+
             OnLeftMouseDown();
         }
 
         if (Input.GetMouseButtonDown(1)) {
+
+            if (TargetingManager.IsTargeting) {
+                Debug.Log("InputManager: RightClick while targeting");
+                OnRightClickWhileTargeting?.Invoke();
+                return;
+            }
+
             OnRightMouseDown();
         }
     }
@@ -39,8 +57,9 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
              
-            CardView3D view = hit.collider.gameObject.GetComponent<CardView3D>();
-            ON_LeftClickedCardView?.Invoke(view);
+            ICardView view = hit.collider.gameObject.GetComponent<ICardView>();
+            this.lastSelection = view;
+            OnLeftClickedCardView?.Invoke(view);
         }
     }
 
@@ -48,8 +67,9 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
 
-            CardView3D view = hit.collider.gameObject.GetComponent<CardView3D>();
-            ON_RightClickedCardView?.Invoke(view);
+            ICardView view = hit.collider.gameObject.GetComponent<ICardView>();
+            this.lastSelection = view;
+            OnRightClickedCardView?.Invoke(view);
         }
     }
 

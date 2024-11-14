@@ -65,5 +65,4 @@ public static class Utils {
             return new RuntimeCardDeck(deckRecord.DeckName, cards, villain);
     } 
 
-
 }

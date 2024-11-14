@@ -1,0 +1,14 @@
+﻿
+
+
+using UnityEngine;
+
+public interface ICardView {
+
+    public Transform Transform { get; }
+    public RuntimeCardData Data { get; }
+
+    void SetZone (CardZone zone);
+    void Interact (GameState state, InputAction action);
+    void SetInteractionBehaviour (ICardInteraction cardInteraction);
+}
