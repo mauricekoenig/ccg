@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CardView3D : MonoBehaviour
 {
+    private GameState gameState;
     public SpriteRenderer cost;
     public SpriteRenderer artwork;
     public RuntimeCardData data;
@@ -29,13 +30,14 @@ public class CardView3D : MonoBehaviour
         artwork.sprite = null;
     }
 
-    public void Init (RuntimeCardData data, ICardInteraction interactionLogic) {
+    public void Init (GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic) {
 
         if (data == null) {
             Debug.Log("NULL!");
             return;
         }
 
+        this.gameState = gameState;
         this.data = data;
         this.costText.text = data.Cost.ToString();
         artwork.sprite = data.Artwork;

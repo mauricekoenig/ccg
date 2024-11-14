@@ -70,7 +70,7 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
 
             state.ActivePlayer.AddCardToBoard(creatureData);
             var cardView = cardViewManager.CreateCardView(creatureData, owner, parent);
-            cardView.Init(creatureData, new CardInteraction_Play(cardView));
+            cardView.Init(state,creatureData, new CardInteraction_Play(cardView));
         }
 
         this.cardViewManager.UpdateBoard(state.ActivePlayer.ID);

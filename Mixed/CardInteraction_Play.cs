@@ -14,7 +14,8 @@ public class CardInteraction_Play : ICardInteraction {
     }
 
     public void LeftClick (GameState gameState) {
-        
+
+        gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnFriendlyCardInPlay, null);
     }
 
     public void RightClick(GameState gameState) {

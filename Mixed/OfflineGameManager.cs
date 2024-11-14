@@ -36,6 +36,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     internal IUIManager uiManager;
     internal IVillainAbilityManager villainAbilityManager;
     internal IPreLoader preLoader;
+    internal ITargetingManager targetingManager;
 
     public event Action<GameState> OnStartOfTurn;
     public event Action<GameState> OnEndOfTurn;
@@ -57,6 +58,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         uiManager = GetComponent<IUIManager>();
         villainAbilityManager = GetComponent<IVillainAbilityManager>();
         preLoader = GetComponent<IPreLoader>();
+        targetingManager = GetComponent<ITargetingManager>();
     }
 
     private void Start () {
@@ -178,7 +180,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         OnGameStateChanged?.Invoke(this.gameState);
     }
 
-    // HANDLER - CardView 3D
+    // HANDLER - InputManager
     public void Handler_LeftClickedCardView (CardView3D cardView) {
 
         cardView.Interact(GetGameState(), InputAction.LeftMouse);
@@ -207,7 +209,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         OnEndOfTurn?.Invoke(GetGameState());
     }
     public void Handler_OnCardDraw (RuntimeCardData cardRuntimeData, int id) {
-        Invoke_OnPlayerDrawCard(cardRuntimeData, id);
+        OnPlayerDrawCard?.Invoke(GetGameState(), cardRuntimeData, id);
     }
     public void Handler_OnCardViewMovedToPlayZone (GameState state, CardView3D cardView) {
 

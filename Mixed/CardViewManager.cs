@@ -25,6 +25,7 @@ public class CardViewManager : MonoBehaviour {
     public Transform GraveyardView2 => graveyardView2;
 
     public IMediator mediator;
+    public ITargetingManager targetingManager;
     public CardViewManagerLayoutSettings layoutSettings;
     public GameObject cardViewPrefab;
 
@@ -33,6 +34,7 @@ public class CardViewManager : MonoBehaviour {
     private void Awake() {
 
         mediator = GetComponent<IMediator>();
+        targetingManager = GetComponent<ITargetingManager>();
         CreateCardViewPool(layoutSettings.CardViewPoolSize);
     }
     private void Start() {
@@ -60,7 +62,7 @@ public class CardViewManager : MonoBehaviour {
         CardViewOwner owner = state.ActivePlayer.ID == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
         Transform cardHolder = state.ActivePlayer.ID == 1 ? handView1 : handView2;
         CardView3D cardView = CreateCardView(data, owner, cardHolder);
-        cardView.Init(data, new CardInteraction_Hand(cardView));
+        cardView.Init(state, data, new CardInteraction_Hand(cardView));
 
         UpdateHand(state.ActivePlayer.ID);
     }
@@ -80,7 +82,7 @@ public class CardViewManager : MonoBehaviour {
         CardViewOwner owner = id == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
 
         CardView3D cardView = CreateCardView (data, owner, hand);
-        cardView.Init(data, new CardInteraction_Hand(cardView));
+        cardView.Init(state,data, new CardInteraction_Hand(cardView));
         UpdateHand(id);
     }
     public void EventHandler_OnCardMovedToGraveyard (GameState state) {
