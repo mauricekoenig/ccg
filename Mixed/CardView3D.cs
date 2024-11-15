@@ -20,6 +20,9 @@ public class CardView3D : MonoBehaviour, ICardView {
     public Transform Transform => this.transform;
     public RuntimeCardData Data => this.data;
 
+    private int id;
+    public int ID => this.id; 
+
     public void SetInteractionBehaviour (ICardInteraction interactionLogic) {
 
         this.interactionLogic = interactionLogic;
@@ -37,13 +40,14 @@ public class CardView3D : MonoBehaviour, ICardView {
         artwork.sprite = null;
     }
 
-    public void Init (GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic) {
+    public void Init (int playerID, GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic) {
 
         if (data == null) {
             Debug.Log("NULL!");
             return;
         }
 
+        this.id = playerID;
         this.gameState = gameState;
         this.data = data;
         this.costText.text = data.Cost.ToString();

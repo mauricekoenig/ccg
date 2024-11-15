@@ -90,7 +90,7 @@ public class RuntimeGameData {
         foreach (var villain in villains) allVillains.Add(villain);
     }
 
-    public RuntimeCardDeck GetTestDeck() {
+    public RuntimeCardDeck GetTestDeck () {
         return new RuntimeCardDeck("Test Deck", allCards.ToList(), gameDataContainer.TestVillain);
     }
 

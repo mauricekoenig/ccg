@@ -41,6 +41,7 @@ public class CardViewManager : MonoBehaviour {
     private void Start() {
 
         mediator.OnPlayerDrawCard += EventHandler_OnPlayerDrawCard;
+
         mediator.OnCardPlayedFromHand += Handler_OnCardPlayedFromHand;
         mediator.OnCardReturnedToHand += EventHandler_OnCardReturnedToHand;
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
@@ -48,13 +49,9 @@ public class CardViewManager : MonoBehaviour {
 
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
 
-        /*cardView.gameObject.transform.SetParent(boardView);
-        // ANIMATION LOGIC HERE
-        cardView.SetInteractionLogic(new CardInteraction_Play(cardView));*/
-
         Transform boardView = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
         ICardView view = Instantiate(cardView_OnBoard_Prefab, boardView).GetComponent<ICardView>();
-        view.Init(state, cardView.Data, new CardInteraction_Play(view));
+        view.Init(state.ActivePlayer.ID, state, cardView.Data, new CardInteraction_Play(view));
 
         cardView.Transform.SetParent(cardView.Transform.root); 
         Destroy(cardView.Transform.gameObject);
@@ -69,7 +66,7 @@ public class CardViewManager : MonoBehaviour {
         CardViewOwner owner = state.ActivePlayer.ID == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
         Transform cardHolder = state.ActivePlayer.ID == 1 ? handView1 : handView2;
         CardView3D cardView = CreateCardView(data, owner, cardHolder);
-        cardView.Init(state, data, new CardInteraction_Hand(cardView));
+        cardView.Init(state.ActivePlayer.ID, state, data, new CardInteraction_Hand(cardView));
 
         UpdateHand(state.ActivePlayer.ID);
     }
@@ -84,12 +81,13 @@ public class CardViewManager : MonoBehaviour {
     }
     public void EventHandler_OnPlayerDrawCard(GameState state, RuntimeCardData data, int playerID) {
 
+        Debug.Log("Draw For: " + playerID);
         int id = playerID;
         Transform hand = id == 1 ? handView1 : handView2;
         CardViewOwner owner = id == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
 
         CardView3D cardView = CreateCardView (data, owner, hand);
-        cardView.Init(state,data, new CardInteraction_Hand(cardView));
+        cardView.Init(playerID, state,data, new CardInteraction_Hand(cardView));
         UpdateHand(id);
     }
     public void EventHandler_OnCardMovedToGraveyard (GameState state) {

@@ -17,19 +17,18 @@ using UnityEngine.SceneManagement;
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
+
     private bool gameStarted;
     public List<Player> playerList = new();
     public GameData gameData;
 
+    private ICardDeck testDeck1;
+    private ICardDeck testDeck2;
 
-    ICardDeck testDeck1;
-    ICardDeck testDeck2;
+    private Player currentPlayer;
+    private Player nonCurrentPlayer;
 
-    Player currentPlayer;
-    Player nonCurrentPlayer;
-
-    CardViewManager cardViewManager;
-
+    private CardViewManager cardViewManager;
     private GameState gameState;
     private IInputManager inputManager;
     private ITurnManager turnManager;
@@ -108,14 +107,12 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         testDeck1 = gameData.runtimeGameData.GetTestDeck();
         testDeck2 = gameData.runtimeGameData.GetTestDeck();
 
-        for (int i = 0; i < playerList.Count; i++) {  
-            
-            if ((i + 1) == 1) playerList[i].Init(i + 1, testDeck1, testDeck1.Villain);
-            else              playerList[i].Init(i+1, testDeck2, testDeck2.Villain);
-        }
+        playerList[0].Init(1, testDeck1, testDeck1.Villain);
+        playerList[1].Init(2, testDeck2, testDeck2.Villain);
 
         this.turnManager.Init(playerList);
         this.villainAbilityManager.Init(this);
+
         this.gameState = new GameState(this.turnManager);
         this.gameState.OnChanged += HandleInternalGameStateChange;
 
@@ -200,16 +197,6 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         cardView.Interact(GetGameState(), InputAction.RightMouse);
         return;
-
-        /*
-        if (cardView.viewPosition == CardZone.Hand) return;
-        CardZone from = CardZone.Play;
-        CardZone to = CardZone.Hand;
-        currentPlayer.cards.MoveCardBetweenZones(cardView.data, from, to);
-        cardView.SetZone(CardZone.Hand);
-        Invoke_GameStateChanged();
-        Invoke_OnCardReturnedToHand(cardView);
-        */
     }
 
     public void Handler_OnRightClickWhileTargeting () {
@@ -229,7 +216,6 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     public void Handler_OnCardViewMovedToPlayZone (GameState state, ICardView cardView) {
 
         if (!cardView.Data.HasEffect()) {
-            Debug.Log("Played a card without an effect.");
             return;
         }
 

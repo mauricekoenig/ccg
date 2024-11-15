@@ -5,8 +5,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class PlayerCards : MonoBehaviour {
+public class PlayerCards : MonoBehaviour, IIdentifiable {
 
+    private int id;
     private ICardDeck cardDeck;
 
     [SerializeField] private List<RuntimeCardData> deck = new();
@@ -24,6 +25,8 @@ public class PlayerCards : MonoBehaviour {
     public List<RuntimeCardData> Deck => deck;
 
     public int OnBoard => inPlay.Count;
+
+    public int ID => this.id;
 
     public void Init (ICardDeck deck) {
 

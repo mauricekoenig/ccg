@@ -8,7 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerCards))]
 [RequireComponent (typeof(PlayerResources))]
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IIdentifiable {
 
     private int id;
     private int health;
@@ -23,7 +23,7 @@ public class Player : MonoBehaviour {
     public int CurrentMana => resources.currentMana;
 
     public PlayerCards cards;
-    public  PlayerResources resources;
+    public PlayerResources resources;
 
     private void Start() {
 
@@ -46,7 +46,6 @@ public class Player : MonoBehaviour {
     public void RemoveMana (int amount) {
         this.resources.Remove(amount);
     }
-
     public void AddCardToBoard (RuntimeCardData data) {
 
         cards.AddCardToZone(data, CardZone.Play);
@@ -55,6 +54,7 @@ public class Player : MonoBehaviour {
     public RuntimeCardData DrawCard () {
 
         if (cards.Deck.Count <= 0) return null;
-        return cards.DrawCardFromDeck();
+        var card = this.cards.DrawCardFromDeck();
+        return card;
     }
 }

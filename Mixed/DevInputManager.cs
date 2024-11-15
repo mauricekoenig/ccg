@@ -33,7 +33,6 @@ public class DevInputManager : MonoBehaviour, IInputManager {
         if (Input.GetMouseButtonDown(0)) {
 
             if (TargetingManager.IsTargeting) {
-                Debug.Log("InputManager: LeftClick while targeting.");
                 OnLeftClickWhileTargeting?.Invoke();
                 return;
             }
@@ -44,7 +43,6 @@ public class DevInputManager : MonoBehaviour, IInputManager {
         if (Input.GetMouseButtonDown(1)) {
 
             if (TargetingManager.IsTargeting) {
-                Debug.Log("InputManager: RightClick while targeting");
                 OnRightClickWhileTargeting?.Invoke();
                 return;
             }

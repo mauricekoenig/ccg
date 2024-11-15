@@ -42,6 +42,7 @@ public class TargetingManager : MonoBehaviour, ITargetingManager {
         this.targetArrowInstance.SetActive(true);
         isTargeting = true;
 
+        Debug.Log("Card belongs to: " + cardView.ID);
         OnStartTargeting?.Invoke(cardView);
     }
 
