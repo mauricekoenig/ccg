@@ -15,8 +15,6 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
     public event Action<ICardView> OnLeftClickedCardView;
     public event Action<ICardView> OnRightClickedCardView;
-    public event Action OnRightClickWhileTargeting;
-    public event Action OnLeftClickWhileTargeting;
 
     private ICardView lastSelection;
 
@@ -32,20 +30,10 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
         if (Input.GetMouseButtonDown(0)) {
 
-            if (TargetingManager.IsTargeting) {
-                OnLeftClickWhileTargeting?.Invoke();
-                return;
-            }
-
             OnLeftMouseDown();
         }
 
         if (Input.GetMouseButtonDown(1)) {
-
-            if (TargetingManager.IsTargeting) {
-                OnRightClickWhileTargeting?.Invoke();
-                return;
-            }
 
             OnRightMouseDown();
         }

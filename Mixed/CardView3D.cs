@@ -21,7 +21,9 @@ public class CardView3D : MonoBehaviour, ICardView {
     public RuntimeCardData Data => this.data;
 
     private int id;
-    public int ID => this.id; 
+    public int ID => this.id;
+
+    public Canvas Canvas { get; }
 
     public void SetInteractionBehaviour (ICardInteraction interactionLogic) {
 

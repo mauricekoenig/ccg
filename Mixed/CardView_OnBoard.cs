@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class CardView_OnBoard : MonoBehaviour, ICardView {
 
-    private Canvas canvas;
     private RuntimeCardData data;
 
     [SerializeField] private CardZone zone;
@@ -23,17 +22,14 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
 
     private int id;
     public int ID => this.id;
-    
-    public int ID_Display;
+
+    private Canvas canvas;
+    public Canvas Canvas => this.canvas;
 
     private void Awake() {
 
         canvas = GetComponent<Canvas>();
         this.interactionLogic = GetComponent<ICardInteraction>();
-    }
-
-    void Update () {
-        ID_Display = ID;
     }
 
     public void Init (int playerID, GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic) {

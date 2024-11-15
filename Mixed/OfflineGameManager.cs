@@ -67,7 +67,6 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView;
         inputManager.OnRightClickedCardView += Handler_RightClickedCardView;
-        inputManager.OnRightClickWhileTargeting += Handler_OnRightClickWhileTargeting;
 
         turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
         turnManager.OnEndOfTurn += Handler_OnEndOfTurn;
@@ -80,6 +79,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         interruptionZones.OnInterruptionZoneEntered += Handler_OnInterruptionZoneEntered;
 
     }
+
 
     private void Handler_OnInterruptionZoneEntered() {
         this.targetingManager.EndTargeting();
@@ -198,9 +198,14 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         cardView.Interact(GetGameState(), InputAction.RightMouse);
         return;
     }
-
     public void Handler_OnRightClickWhileTargeting () {
+
+        Debug.Log("Right Clicked while targeting!");
         this.targetingManager.EndTargeting();
+    }
+    private void Handler_OnLeftClickWhileTargeting() {
+
+        Debug.Log("Left Clicked while targeting!");
     }
 
     // HANDLER - TurnManager
@@ -253,8 +258,15 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
                 OnVillainAbilityClicked?.Invoke(GetGameState(), data.villain);
                 break;
 
-            case GameStateChangeReason.Input_LeftClickedOnFriendlyCardInPlay:
+            case GameStateChangeReason.Input_LeftClickedOnCardInPlay:
                 this.targetingManager.StartTargeting(data.affectedView);
+                break;
+
+            case GameStateChangeReason.Input_LeftClickedOnCardInPlay_WhileTargeting:
+                // Attack.
+                this.targetingManager.EndTargeting();
+                this.cardViewManager.AttackAnimation(TargetingManager.CurrentViewTargeting, data.affectedView);
+                
                 break;
         }
 

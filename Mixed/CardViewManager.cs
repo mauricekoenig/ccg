@@ -1,11 +1,15 @@
 ﻿
 
 
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
+
+    private static bool isAnimating;
+    public static bool IsAnimating = isAnimating;
 
     [SerializeField] private GameObject cardView_OnBoard_Prefab;
     [SerializeField] private Transform cardViewPoolParent;
@@ -47,6 +51,21 @@ public class CardViewManager : MonoBehaviour {
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
     }
 
+   public void AttackAnimation (ICardView attacker, ICardView defender) {
+
+        if (IsAnimating) return;
+
+        IsAnimating = true;
+        Vector3 origin = attacker.Transform.position;
+        attacker.Canvas.sortingOrder = 100;
+
+        attacker.Transform.DOMove(defender.Transform.position, .3f).OnComplete(() => {
+            attacker.Transform.DOMove(origin, .3f);
+            attacker.Canvas.sortingOrder = 0;
+            IsAnimating = false;
+        });
+    }
+
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
 
         Transform boardView = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
@@ -81,7 +100,6 @@ public class CardViewManager : MonoBehaviour {
     }
     public void EventHandler_OnPlayerDrawCard(GameState state, RuntimeCardData data, int playerID) {
 
-        Debug.Log("Draw For: " + playerID);
         int id = playerID;
         Transform hand = id == 1 ? handView1 : handView2;
         CardViewOwner owner = id == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
