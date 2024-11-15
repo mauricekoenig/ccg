@@ -9,11 +9,12 @@ public class TargetingManager : MonoBehaviour, ITargetingManager {
     private static bool isTargeting;
     public static bool IsTargeting => isTargeting;
 
+    [SerializeField] private TargetingSettings targetingSettings;
     [SerializeField] private ICardView currentView;
     [SerializeField] private GameObject targetArrowPrefab;
     [SerializeField] private GameObject targetArrowInstance;
-    private TargetArrow targetArrow;
 
+    private TargetArrow targetArrow;
 
     public event Action<ICardView> OnStartTargeting;
     public event Action<ICardView> OnEndTargeting;
@@ -35,6 +36,7 @@ public class TargetingManager : MonoBehaviour, ITargetingManager {
         if (isTargeting) return;
 
         this.currentView = cardView;
+        this.currentView.Scale(targetingSettings.endValue, targetingSettings.scaleDuration);
         this.targetArrowInstance.transform.position = cardView.Transform.position;
         this.targetArrow.SetOrigin(cardView.Transform.position);
         this.targetArrowInstance.SetActive(true);
@@ -47,6 +49,7 @@ public class TargetingManager : MonoBehaviour, ITargetingManager {
 
         if (!isTargeting) return;
 
+        this.currentView.Scale(1, targetingSettings.scaleDuration);
         this.targetArrowInstance.SetActive(false);
         this.targetArrowInstance.transform.position = this.currentView.Transform.position;
         this.targetArrow.Reset();

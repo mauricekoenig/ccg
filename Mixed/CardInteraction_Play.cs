@@ -17,8 +17,6 @@ public class CardInteraction_Play : ICardInteraction {
 
     public void LeftClick (GameState gameState) {
 
-        Debug.Log("Hello, I am here!");
-
         if (TargetingManager.IsTargeting) {
             Debug.Log("Already targeting!");
             return;

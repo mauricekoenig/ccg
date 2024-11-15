@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -83,4 +84,8 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
         this.zone = zone;
     }
 
+    public void Scale (float endValue, float time) {
+
+        this.transform.DOScale(endValue, time).SetEase(Ease.OutSine);
+    }
 }

@@ -85,4 +85,7 @@ public class CardView3D : MonoBehaviour, ICardView {
         }
     }
 
+    public void Scale(float endValue, float time) {
+        
+    }
 }
