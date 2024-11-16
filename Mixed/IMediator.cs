@@ -19,7 +19,4 @@ public interface IMediator {
     void StartGame();
     void EndPlayerTurn();
     void DrawForActivePlayer();
-    void DiscardRandomCard();
-    void PlayRandomCardFromHand();
-    bool CardIsPlayable(RuntimeCardData card);
 }

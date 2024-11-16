@@ -8,8 +8,7 @@ using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
 
-    private static bool isAnimating;
-    public static bool IsAnimating = isAnimating;
+    public bool IsAnimating { get; set; }
 
     [SerializeField] private GameObject cardView_OnBoard_Prefab;
     [SerializeField] private Transform cardViewPoolParent;
@@ -38,33 +37,18 @@ public class CardViewManager : MonoBehaviour {
 
     private void Awake() {
 
-        mediator = GetComponent<IMediator>();
-        targetingManager = GetComponent<ITargetingManager>();
+        this.mediator = GetComponent<IMediator>();
+        this.targetingManager = GetComponent<ITargetingManager>();
         CreateCardViewPool(layoutSettings.CardViewPoolSize);
     }
     private void Start() {
 
         mediator.OnPlayerDrawCard += EventHandler_OnPlayerDrawCard;
-
         mediator.OnCardPlayedFromHand += Handler_OnCardPlayedFromHand;
         mediator.OnCardReturnedToHand += EventHandler_OnCardReturnedToHand;
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
     }
 
-   public void AttackAnimation (ICardView attacker, ICardView defender) {
-
-        if (IsAnimating) return;
-
-        IsAnimating = true;
-        Vector3 origin = attacker.Transform.position;
-        attacker.Canvas.sortingOrder = 100;
-
-        attacker.Transform.DOMove(defender.Transform.position, .3f).OnComplete(() => {
-            attacker.Transform.DOMove(origin, .3f);
-            attacker.Canvas.sortingOrder = 0;
-            IsAnimating = false;
-        });
-    }
 
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
 
