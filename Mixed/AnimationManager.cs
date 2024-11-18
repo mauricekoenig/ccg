@@ -33,7 +33,7 @@ public class AnimationManager : MonoBehaviour, IAnimationManager {
                 damageIndicator.Hide(); 
                 attacker.Canvas.sortingOrder = 0; 
                 isAnimating = false;
-                attacker_creature.PerformAttack();
+                attacker_creature.PerformAttack(defender_creature);
             });
     }
 }

@@ -53,6 +53,9 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
             healthTmp.text = crd.Health.ToString();
 
             ToggleSummoningSickness();
+
+            crd.OnAttackChanged += Handler_OnAttackChanged;
+            crd.OnHealthChanged += Handler_OnHealthChanged;
             crd.OnAttacksPerTurnChanged += ToggleSummoningSickness;
         }
     }
@@ -91,6 +94,25 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
     public void Scale (float endValue, float time) {
 
         this.transform.DOScale(endValue, time).SetEase(Ease.OutSine);
+    }
+
+    public void Handler_OnAttackChanged (CreatureRuntimeCardData creatureData) {
+
+        this.attackTmp.text = creatureData.Attack.ToString();
+    }
+
+    public void Handler_OnHealthChanged (CreatureRuntimeCardData creatureData, bool creatureDied) {
+
+        this.healthTmp.text = creatureData.Health.ToString();
+        if (!creatureDied) return;
+
+        var changeData = GameStateChangeData.New(this.gameState);
+        changeData.affectedView = this;
+        this.gameState.NotifyStateChange(GameStateChangeReason.Battle_CreatureDied, changeData);
+    }
+
+    public void Handler_OnAttacksPerTurnChanged (CreatureRuntimeCardData creatureData) {
+        ToggleSummoningSickness();
     }
 
     public void ToggleSummoningSickness () {

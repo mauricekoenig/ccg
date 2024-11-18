@@ -236,6 +236,9 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
                 this.targetingManager.EndTargeting();
                 this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);
                 break;
+
+            case GameStateChangeReason.Battle_CreatureDied:
+                break;
         }
 
         Invoke_GameStateChanged();

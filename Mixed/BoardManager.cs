@@ -14,6 +14,7 @@ public class BoardManager : MonoBehaviour, IBoardManager {
     }
 
     public void Init (GameState gameState) {
+
         this.gameState = gameState;
     }
 }

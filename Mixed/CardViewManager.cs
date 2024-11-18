@@ -184,10 +184,7 @@ public class CardViewManager : MonoBehaviour {
         view.transform.position = new Vector3(-100, -100, 0);
         view.ResetView();
         cardViewPool.Enqueue(view.gameObject);
-
-        #if UNITY_EDITOR
-                cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
-        #endif
+        cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
     }
 
     private Quaternion GetCardRotation(CardViewOwner owner) {

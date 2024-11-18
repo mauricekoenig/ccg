@@ -14,5 +14,7 @@ public enum GameStateChangeReason {
     Input_LeftClickedOnCardInPlay,
     Input_LeftClickedOnCardInPlay_WhileTargeting,
     Input_RightClickedOnCard,
-    Input_RightClickedOnCardWhileTargeting
+    Input_RightClickedOnCardWhileTargeting,
+
+    Battle_CreatureDied
 }

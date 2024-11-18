@@ -9,6 +9,9 @@ public class GameStateChangeData {
     public RuntimeCardData cardData;
     public Villain villain;
 
+    public CreatureRuntimeCardData attackingCreature;
+    public CreatureRuntimeCardData defendingCreature;
+
     public GameStateChangeData (GameState state) {
 
         this.state = state;
