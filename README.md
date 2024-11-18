@@ -39,3 +39,7 @@
 <h3>Targeting / Battle (18.11.2024) </h3>
 
 ![screenshot1 game](gif_battle.gif)
+
+<h3>Graveyard (18.11.2024) </h3>
+
+![screenshot1 game](gif_graveyard.gif)
