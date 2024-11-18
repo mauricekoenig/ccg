@@ -8,6 +8,7 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public int Attack { get; set; }
     public int Health { get; set; }
+    public int AttacksPerTurn { get; set; }
 
     public HashSet<CreatureType> Types { get; set; } = new();
     public HashSet<Keyword> Keywords { get; set; } = new();
@@ -16,11 +17,13 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
         Attack = attack;
         Health = health;
+        AttacksPerTurn = 1;
     }
     public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health) : base(id, name, cost, artwork) {
 
         Attack = attack;
         Health = health;
+        AttacksPerTurn = 1;
     }
 
     public override string ToString() {

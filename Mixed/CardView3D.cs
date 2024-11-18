@@ -72,21 +72,21 @@ public class CardView3D : MonoBehaviour, ICardView {
         viewPosition = zone;
     }
 
-    public void Interact (GameState state, InputAction action) {
+    public void Interact (GameState state, ICardView view, InputAction action) {
         if (this.interactionLogic == null) return;
 
         switch (action) {
 
             case InputAction.LeftMouse:
-                this.interactionLogic.LeftClick(state);
+                this.interactionLogic.LeftClick(state, view);
                 break;
 
             case InputAction.RightMouse:
-                this.interactionLogic.RightClick(state);
+                this.interactionLogic.RightClick(state, view);
                 break;
 
             case InputAction.MiddleMouse:
-                this.interactionLogic.MiddleClick(state);
+                this.interactionLogic.MiddleClick(state, view);
                 break;
         }
     }

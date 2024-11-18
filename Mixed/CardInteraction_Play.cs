@@ -11,7 +11,7 @@ public class CardInteraction_Play : ICardInteraction {
         this.cardView.SetZone(CardZone.Play);
     }
 
-    public void LeftClick (GameState gameState) {
+    public void LeftClick (GameState gameState, ICardView view) {
 
         var changeData = GameStateChangeData.New(gameState);
 
@@ -30,10 +30,10 @@ public class CardInteraction_Play : ICardInteraction {
         gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnCardInPlay, changeData);
     }
 
-    public void RightClick (GameState gameState) {
+    public void RightClick (GameState gameState, ICardView view) {
 
     }
-    public void MiddleClick(GameState gameState) {
+    public void MiddleClick(GameState gameState, ICardView view) {
         
 
     }

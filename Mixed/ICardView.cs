@@ -11,7 +11,7 @@ public interface ICardView : IIdentifiable {
 
     void Scale(float endValue, float time);
     void SetZone (CardZone zone);
-    void Interact (GameState state, InputAction action);
+    void Interact (GameState state, ICardView view, InputAction action);
     void SetInteractionBehaviour (ICardInteraction cardInteraction);
     void Init (int playerID, GameState gameState, RuntimeCardData data, ICardInteraction interactionLogic);
 }

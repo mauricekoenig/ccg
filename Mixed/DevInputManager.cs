@@ -42,7 +42,7 @@ public class DevInputManager : MonoBehaviour, IInputManager {
      public void OnLeftMouseDown() {
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
-             
+            
             ICardView view = hit.collider.gameObject.GetComponent<ICardView>();
             this.lastSelection = view;
             OnLeftClickedCardView?.Invoke(view);

@@ -154,11 +154,11 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     // HANDLER - InputManager
     public void Handler_LeftClickedCardView (ICardView cardView) {
 
-        cardView.Interact(GetGameState(), InputAction.LeftMouse);
+        cardView.Interact(GetGameState(), cardView, InputAction.LeftMouse);
     }
     public void Handler_RightClickedCardView (ICardView cardView) {
 
-        cardView.Interact(GetGameState(), InputAction.RightMouse);
+        cardView.Interact(GetGameState(), cardView, InputAction.RightMouse);
         return;
     }
     public void Handler_OnRightClickWhileTargeting () {
@@ -228,9 +228,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
             case GameStateChangeReason.Input_LeftClickedOnCardInPlay_WhileTargeting:
                 // Attack.
                 this.targetingManager.EndTargeting();
-                this.playerManager.Init(null, null);
-                this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);
-                
+                this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);      
                 break;
         }
 

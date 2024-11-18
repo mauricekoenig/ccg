@@ -15,8 +15,9 @@ public class CardInteraction_Hand : ICardInteraction {
         this.cardView.SetZone(CardZone.Hand);
     }
 
-    public void LeftClick (GameState gameState) {
+    public void LeftClick (GameState gameState, ICardView view) {
 
+        if (gameState.ActivePlayer.ID != view.ID) return;
         if (gameState.ActivePlayer.CardsOnBoard > 4) return;
 
         if (gameState.ActivePlayer.resources.currentMana >= this.cardView.Data.Cost) {
@@ -30,11 +31,11 @@ public class CardInteraction_Hand : ICardInteraction {
             gameState.NotifyStateChange(GameStateChangeReason.Action_PlayedCardFromHand, changeData) ;
         }
     }
-    public void RightClick(GameState gameState) {
+    public void RightClick(GameState gameState, ICardView view) {
         
 
     }
-    public void MiddleClick(GameState gameState) {
+    public void MiddleClick(GameState gameState, ICardView view) {
         
 
     }
