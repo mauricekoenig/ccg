@@ -55,11 +55,11 @@ public class Player : MonoBehaviour, IIdentifiable {
         return this.cards.GetCreaturesInPlay();
     }
 
-    public void ResetAttackStatusForCreaturesInPlay () {
+    public void ResetAttacksPerTurn () {
 
         var creatures = this.cards.GetCreaturesInPlay();
         foreach (var creature in creatures) {
-            creature.ResetAttackStatus();
+            creature.ResetAttacksPerTurn();
         }
     }
 

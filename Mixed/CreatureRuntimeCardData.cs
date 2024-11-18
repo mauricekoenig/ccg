@@ -1,6 +1,7 @@
 ﻿
 
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public HashSet<CreatureType> Types { get; set; } = new();
     public HashSet<Keyword> Keywords { get; set; } = new();
+
+    public event Action OnAttacksPerTurnChanged;
 
     public CreatureRuntimeCardData (int id, string name, int cost, string artworkBase64, int attack, int health) : base (id, name, cost, artworkBase64) {
 
@@ -45,7 +48,15 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 ;
     }
 
-    public void ResetAttackStatus () {
-        AttacksPerTurn++;
+    public void PerformAttack () {
+        if (AttacksPerTurn <= 0) return;
+        AttacksPerTurn--;
+        OnAttacksPerTurnChanged?.Invoke();
+    }
+
+    public void ResetAttacksPerTurn () {
+
+        AttacksPerTurn = 1;
+        OnAttacksPerTurnChanged?.Invoke();
     }
 }

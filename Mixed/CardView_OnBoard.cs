@@ -51,7 +51,9 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
             CreatureRuntimeCardData crd = data as CreatureRuntimeCardData;
             attackTmp.text = crd.Attack.ToString();
             healthTmp.text = crd.Health.ToString();
+
             ToggleSummoningSickness();
+            crd.OnAttacksPerTurnChanged += ToggleSummoningSickness;
         }
     }
 

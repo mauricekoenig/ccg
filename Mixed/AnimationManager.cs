@@ -33,9 +33,7 @@ public class AnimationManager : MonoBehaviour, IAnimationManager {
                 damageIndicator.Hide(); 
                 attacker.Canvas.sortingOrder = 0; 
                 isAnimating = false;
-                attacker_creature.AttacksPerTurn--;
-                var attacker_creature_view = attacker as CardView_OnBoard;
-                attacker_creature_view.ToggleSummoningSickness();
+                attacker_creature.PerformAttack();
             });
     }
 }

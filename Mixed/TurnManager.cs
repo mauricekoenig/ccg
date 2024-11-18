@@ -46,7 +46,7 @@ public class TurnManager : MonoBehaviour, ITurnManager {
         turns++;
         ActivePlayer.AddMana(1);
         DrawCard(ActivePlayer);
-        ActivePlayer.ResetAttackStatusForCreaturesInPlay();
+        ActivePlayer.ResetAttacksPerTurn();
         OnStartOfTurn?.Invoke();
     }
 
