@@ -15,6 +15,7 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
     public event Action<ICardView> OnLeftClickedCardView;
     public event Action<ICardView> OnRightClickedCardView;
+    public event Action OnRightClickWhileTargeting;
 
     private ICardView lastSelection;
 
@@ -50,6 +51,11 @@ public class DevInputManager : MonoBehaviour, IInputManager {
     }
 
     public void OnRightMouseDown() {
+
+        if (TargetingManager.IsTargeting) {
+            OnRightClickWhileTargeting?.Invoke();
+            return;
+        }
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
 

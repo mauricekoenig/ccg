@@ -10,10 +10,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(FindCardManager))]
+[RequireComponent(typeof(GraveyardManager))]
+
 public class UIManager : MonoBehaviour, IUIManager {
 
     private IMediator mediator;
+
     private FindCardManager findCardManager;
+    private GraveyardManager graveyardManager;
 
     public TextMeshProUGUI player1Display;
     public TextMeshProUGUI player2Display;
@@ -33,6 +37,7 @@ public class UIManager : MonoBehaviour, IUIManager {
 
         mediator = GetComponent<IMediator>();
         findCardManager = GetComponent<FindCardManager>();
+        graveyardManager = GetComponent<GraveyardManager>();
     }
 
     private void Start() {
@@ -42,6 +47,11 @@ public class UIManager : MonoBehaviour, IUIManager {
         mediator.OnEndOfTurn += Handle_OnEndOfTurn;
         mediator.OnFindEffectTriggered += Handle_FindEffectTriggered;
         mediator.OnCardInFindWindowSelected += Handle_OnCardInFindWindowSelected;
+    }
+
+    public void ShowGraveyard (int id) {
+
+        this.graveyardManager.ShowGraveyard(id);
     }
 
     private void Handle_OnCardInFindWindowSelected(GameState state, RuntimeCardData data) {

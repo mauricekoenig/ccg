@@ -16,6 +16,8 @@ public class CardView3D : MonoBehaviour, ICardView {
     public TextMeshPro healthText;
     public TextMeshPro nameText;
 
+    public SpriteRenderer colorRenderer;
+
     private ICardInteraction interactionLogic;
     public Transform Transform => this.transform;
     public RuntimeCardData Data => this.data;
@@ -55,6 +57,7 @@ public class CardView3D : MonoBehaviour, ICardView {
         this.costText.text = data.Cost.ToString();
         artwork.sprite = data.Artwork;
         nameText.text = data.Name;
+        this.colorRenderer.color = ColorUtility.GetCardColor(data.Color);
 
         if (data is CreatureRuntimeCardData) {
 

@@ -74,19 +74,19 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView_InHand;
         inputManager.OnRightClickedCardView += Handler_RightClickedCardView;
+        inputManager.OnRightClickWhileTargeting += Handler_OnRightClickWhileTargeting;
 
         turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
         turnManager.OnEndOfTurn += Handler_OnEndOfTurn;
         turnManager.OnCardDraw += Handler_OnCardDraw;
 
-        cardViewManager.OnCardMovedToPlayZone += Handler_OnCardViewMovedToPlayZone;
+        cardViewManager.OnViewMovedToPlayZone += Handler_OnCardViewMovedToPlayZone;
 
         villainAbilityManager.OnVillainAbilityHandled += Handler_OnVillainAbilityHandled;
 
         interruptionZones.OnInterruptionZoneEntered += Handler_OnInterruptionZoneEntered;
 
     }
-
 
     private void Handler_OnInterruptionZoneEntered() {
         this.targetingManager.EndTargeting();
@@ -153,6 +153,12 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     public void Invoke_GameStateChanged () {
 
         OnGameStateChanged?.Invoke(this.gameState);
+    }
+
+    // HANDLER - CardViewManager
+
+    private void Handler_OnViewMovedToGraveyard(RuntimeCardData data) {
+        Debug.Log(data.Name + " moved to graveyard! " + data.ID.ToString());
     }
 
     // HANDLER - InputManager
@@ -238,6 +244,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
                 break;
 
             case GameStateChangeReason.Battle_CreatureDied:
+                this.cardViewManager.MoveToGraveyard(data.affectedView);
                 break;
         }
 

@@ -224,7 +224,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      medieval-dual-swords-crossed-on-transparent-background-png_0: 4645365597196730214
+      medieval-dual-swords-crossed-on-transparent-background-png_1: 823787309026683720
+      medieval-dual-swords-crossed-on-transparent-background-png_2: 1581006297082144641
+      medieval-dual-swords-crossed-on-transparent-background-png_3: 6012924284617474864
+      medieval-dual-swords-crossed-on-transparent-background-png_4: -3137513596813288581
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

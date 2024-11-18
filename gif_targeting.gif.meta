@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      gif_targeting_0: 6864810423512263307
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -33,7 +33,8 @@ public class CardViewManager : MonoBehaviour {
     public CardViewManagerLayoutSettings layoutSettings;
     public GameObject cardViewPrefab;
 
-    public event Action<GameState, ICardView> OnCardMovedToPlayZone;
+    public event Action<GameState, ICardView> OnViewMovedToPlayZone;
+    public event Action<ICardView> OnViewMovedToGraveyard;
 
     private void Awake() {
 
@@ -52,12 +53,8 @@ public class CardViewManager : MonoBehaviour {
 
     private void Handler_OnStartOfTurn(GameState state) {
 
-        Transform board = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
+        
 
-        foreach (Transform t in board) {
-            Debug.Log(t.name);
-            t.GetComponent<CardView_OnBoard>().ToggleSummoningSickness();
-        }
     }
 
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
@@ -72,7 +69,7 @@ public class CardViewManager : MonoBehaviour {
         UpdateHand (state.ActivePlayer.ID);
         UpdateBoard (state.ActivePlayer.ID);
 
-        OnCardMovedToPlayZone?.Invoke(state, cardView);
+        OnViewMovedToPlayZone?.Invoke(state, cardView);
     }
     private void Handler_OnCardInFindWindowSelected (GameState state, RuntimeCardData data) {
 
@@ -207,6 +204,22 @@ public class CardViewManager : MonoBehaviour {
             cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
         #endif
 
+    }
+
+    public void MoveToGraveyard (ICardView cardView) {
+
+        int id = cardView.ID;
+        Vector3 gy = id == 1 ? GraveyardView1.position : GraveyardView2.position;
+        RuntimeCardData data = cardView.Data;
+
+        cardView.Transform.SetParent(cardView.Transform.parent.root);
+        UpdateBoard(id);
+
+        cardView.Transform.DOScale(0, .7f);
+        cardView.Transform.DOMove(gy, .75f).OnComplete(() => {
+            OnViewMovedToGraveyard?.Invoke(cardView);
+            Destroy(cardView.Transform.gameObject);
+        });
     }
 }
 

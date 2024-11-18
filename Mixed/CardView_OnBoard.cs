@@ -103,6 +103,16 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
 
     public void Handler_OnHealthChanged (CreatureRuntimeCardData creatureData, bool creatureDied) {
 
+        int oldHealth = int.Parse(this.healthTmp.text);
+
+        if (creatureData.Health < oldHealth) {
+            this.healthTmp.color = Color.red;
+        }
+
+        if (creatureData.Health > oldHealth) {
+            this.healthTmp.color = Color.green;
+        }
+
         this.healthTmp.text = creatureData.Health.ToString();
         if (!creatureDied) return;
 
@@ -121,5 +131,15 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
         var creature = Data as CreatureRuntimeCardData;
         if (creature.AttacksPerTurn > 0) icon_summoningSickness.SetActive(false);
         else icon_summoningSickness.SetActive(true);
+    }
+
+    private void OnDestroy() {
+
+        if (data is CreatureRuntimeCardData crd) {
+
+            crd.OnAttackChanged -= Handler_OnAttackChanged;
+            crd.OnHealthChanged -= Handler_OnHealthChanged;
+            crd.OnAttacksPerTurnChanged -= ToggleSummoningSickness;
+        }
     }
 }
