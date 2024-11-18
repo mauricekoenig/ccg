@@ -55,6 +55,7 @@ public class CardViewManager : MonoBehaviour {
         Transform board = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
 
         foreach (Transform t in board) {
+            Debug.Log(t.name);
             t.GetComponent<CardView_OnBoard>().ToggleSummoningSickness();
         }
     }

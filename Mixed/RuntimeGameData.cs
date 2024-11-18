@@ -91,7 +91,14 @@ public class RuntimeGameData {
     }
 
     public RuntimeCardDeck GetTestDeck () {
-        return new RuntimeCardDeck("Test Deck", allCards.ToList(), gameDataContainer.TestVillain);
+
+        List<RuntimeCardData> copiedData = new();
+
+        foreach (var card in allCards) {
+            copiedData.Add(card.Clone());
+        }
+
+        return new RuntimeCardDeck("Test Deck", copiedData.ToList(), gameDataContainer.TestVillain);
     }
 
     public void PrintAll () {
