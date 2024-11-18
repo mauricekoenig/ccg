@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FlowDiagram_InputManage_0: 1703453087715402430
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

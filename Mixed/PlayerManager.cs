@@ -34,7 +34,7 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
         this.player1 = player1;
 
         this.player1.Init(1, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
-        this.player2.Init(2, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
+        this.player2.Init(2, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain2);
     }
 
     public List<RuntimeCardData> GetCardsInGraveyardById (int playerId) {

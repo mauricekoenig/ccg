@@ -9,6 +9,8 @@ using UnityEngine;
 public class GameData : ScriptableObject {
 
     public Villain TestVillain;
+    public Villain TestVillain2;
+
     public RuntimeGameData runtimeGameData;
 
     [SerializeField] private List<Keyword> AllKeywords = new();
