@@ -1,13 +1,12 @@
+<h3>Gameplay (simplified)</h3>
+
+![screenshot2 game](screen.png)
+
 <h1>KINGDOM TCG</h1>
 
 <h3>Gameplay (11.11.2024) </h3>
 
 ![screenshot2 game](screen_gameplay2.png)
-
-<h3>Gameplay (simplified)</h3>
-
-![screenshot2 game](screen.png)
-
 
 <h3>Deck Editor - Villain Selection (11.11.2024)</h3>
 
@@ -39,3 +38,7 @@
 <h3>Targeting / Battle (18.11.2024) </h3>
 
 ![screenshot1 game](gif_battle.gif)
+
+<h3>Graveyard (18.11.2024) </h3>
+
+![screenshot1 game](gif_graveyard.gif)
