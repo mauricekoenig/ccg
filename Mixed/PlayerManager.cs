@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IPlayerManager {
@@ -16,6 +17,9 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
     public Player Player2 => this.player2;
 
     private List<Player> playerList = new();
+
+    public event Action<int, RuntimeCardData> OnCardMovedToGraveyard;
+
     public  List<Player> PlayerList => this.playerList;
 
     public Player GetPlayerById(int id) {
@@ -31,6 +35,10 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
 
         this.player1.Init(1, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
         this.player2.Init(2, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
+    }
+
+    public List<RuntimeCardData> GetCardsInGraveyardById (int playerId) {
+        return GetPlayerById(playerId).cards.Graveyard;
     }
 
     public List<CreatureRuntimeCardData> GetCreaturesInPlayByPlayer (int playerId) {
@@ -49,7 +57,8 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
 
     private void Handler_OnViewMovedToGraveyard (ICardView view) {
 
-        Player player = GetPlayerById(view.ID);
-        player.cards.MoveCardBetweenZones(view.Data, CardZone.Play, CardZone.Graveyard);
+        GetPlayerById(view.ID).cards.MoveCardBetweenZones(view.Data, CardZone.Play, CardZone.Graveyard);
+        this.OnCardMovedToGraveyard?.Invoke(view.ID, view.Data);
+
     }
 }

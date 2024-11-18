@@ -13,6 +13,15 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     private int health;
     public int Health { get { return health; } set { health = value; OnHealthChanged?.Invoke(this, (health <= 0) ); } }
 
+    private int baseAttack;
+    public int BaseAttack => baseAttack;
+
+    private int baseHealth;
+    public int BaseHealth => baseHealth;
+
+    private int baseCost;
+    public int BaseCost => baseCost;
+
     private int attacksPerTurn;
     public int AttacksPerTurn { get { return this.attacksPerTurn; } set { this.attacksPerTurn = value; OnAttacksPerTurnChanged?.Invoke(); } }
 
@@ -25,11 +34,19 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public CreatureRuntimeCardData(int id, string name, int cost, string artworkBase64, int attack, int health, string color) : base(id, name, cost, artworkBase64, color) {
 
+        this.baseAttack = attack;
+        this.baseHealth = health;
+        this.baseCost = cost;
+
         Attack = attack;
         Health = health;
         AttacksPerTurn = 0;
     }
     public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health, string color) : base(id, name, cost, artwork, color) {
+
+        this.baseAttack = attack;
+        this.baseHealth = health;
+        this.baseCost = cost;
 
         Attack = attack;
         Health = health;
@@ -68,5 +85,12 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     public void ResetAttacksPerTurn () {
 
         AttacksPerTurn = 1;
+    }
+
+    public void ResetAllStats () {
+
+        this.attack = this.baseAttack;
+        this.health = this.baseHealth;
+        this.Cost = this.baseCost;
     }
 }

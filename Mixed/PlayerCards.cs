@@ -16,6 +16,9 @@ public class PlayerCards : MonoBehaviour, IIdentifiable {
     [SerializeField] private List<RuntimeCardData> graveyard = new();
     [SerializeField] private List<RuntimeCardData> exiled = new();
 
+    public List<RuntimeCardData> Graveyard => this.graveyard;
+
+
     public int DeckSize => deck.Count;
     public int HandSize => hand.Count;
     public int InPlaySize => inPlay.Count;

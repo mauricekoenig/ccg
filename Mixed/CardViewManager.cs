@@ -53,12 +53,8 @@ public class CardViewManager : MonoBehaviour {
 
     private void Handler_OnStartOfTurn(GameState state) {
 
-        Transform board = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
+        
 
-        foreach (Transform t in board) {
-            Debug.Log(t.name);
-            t.GetComponent<CardView_OnBoard>().ToggleSummoningSickness();
-        }
     }
 
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
