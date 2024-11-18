@@ -1,13 +1,12 @@
 ﻿
-
-
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IPlayerManager {
 
+    [SerializeField] private CardViewManager cardViewManager;
     [SerializeField] private GameData gameData;
 
     private Player player1;
@@ -37,5 +36,20 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
     public List<CreatureRuntimeCardData> GetCreaturesInPlayByPlayer (int playerId) {
 
         return GetPlayerById(playerId).GetCreaturesInPlay();
+    }
+
+    void Awake () {
+
+        this.cardViewManager = GetComponent<CardViewManager>();
+    }
+    void Start () {
+
+        this.cardViewManager.OnViewMovedToGraveyard += Handler_OnViewMovedToGraveyard;
+    }
+
+    private void Handler_OnViewMovedToGraveyard (ICardView view) {
+
+        Player player = GetPlayerById(view.ID);
+        player.cards.MoveCardBetweenZones(view.Data, CardZone.Play, CardZone.Graveyard);
     }
 }

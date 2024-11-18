@@ -137,4 +137,9 @@ public class UIManager : MonoBehaviour, IUIManager {
     public void ChangeScene (int buildIndex) {
         SceneManager.LoadScene(buildIndex);
     }
+
+    public void OpenGraveyard (int id) {
+
+        ToggleWindow(this.graveyardWindow);
+    }
 }

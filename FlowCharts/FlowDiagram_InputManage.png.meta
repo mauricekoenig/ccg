@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5b5e4b4467916e14a96d48b50e414bf9
+guid: b0d452e89aca87b43b4432b2cf69d7cd
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6864810423512263307
-    second: gif_targeting_0
+      213: 1703453087715402430
+    second: FlowDiagram_InputManage_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gif_targeting_0
+      name: FlowDiagram_InputManage_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 600
-        height: 337
+        width: 452
+        height: 751
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b8ae8d775b4b44f50800000000000000
-      internalID: 6864810423512263307
+      spriteID: eb2a1d8de81e3a710800000000000000
+      internalID: 1703453087715402430
       vertices: []
       indices: 
       edges: []
@@ -128,8 +128,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      gif_targeting_0: 6864810423512263307
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
