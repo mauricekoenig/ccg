@@ -132,4 +132,14 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
         if (creature.AttacksPerTurn > 0) icon_summoningSickness.SetActive(false);
         else icon_summoningSickness.SetActive(true);
     }
+
+    private void OnDestroy() {
+
+        if (data is CreatureRuntimeCardData crd) {
+
+            crd.OnAttackChanged -= Handler_OnAttackChanged;
+            crd.OnHealthChanged -= Handler_OnHealthChanged;
+            crd.OnAttacksPerTurnChanged -= ToggleSummoningSickness;
+        }
+    }
 }
