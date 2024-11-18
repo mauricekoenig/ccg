@@ -33,4 +33,9 @@ public class PlayerManager : MonoBehaviour, IPlayerManager {
         this.player1.Init(1, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
         this.player2.Init(2, this.gameData.runtimeGameData.GetTestDeck(), gameData.TestVillain);
     }
+
+    public List<CreatureRuntimeCardData> GetCreaturesInPlayByPlayer (int playerId) {
+
+        return GetPlayerById(playerId).GetCreaturesInPlay();
+    }
 }

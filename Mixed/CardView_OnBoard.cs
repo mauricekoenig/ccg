@@ -13,6 +13,7 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
     [SerializeField] private TextMeshProUGUI attackTmp;
     [SerializeField] private TextMeshProUGUI healthTmp;
     [SerializeField] private Image artwork;
+    [SerializeField] private GameObject icon_summoningSickness;
 
     private ICardInteraction interactionLogic;
 
@@ -50,6 +51,7 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
             CreatureRuntimeCardData crd = data as CreatureRuntimeCardData;
             attackTmp.text = crd.Attack.ToString();
             healthTmp.text = crd.Health.ToString();
+            ToggleSummoningSickness();
         }
     }
 
@@ -87,5 +89,13 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
     public void Scale (float endValue, float time) {
 
         this.transform.DOScale(endValue, time).SetEase(Ease.OutSine);
+    }
+
+    public void ToggleSummoningSickness () {
+
+        if (Data is not CreatureRuntimeCardData) return;
+        var creature = Data as CreatureRuntimeCardData;
+        if (creature.AttacksPerTurn > 0) icon_summoningSickness.SetActive(false);
+        else icon_summoningSickness.SetActive(true);
     }
 }

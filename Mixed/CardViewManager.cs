@@ -47,8 +47,17 @@ public class CardViewManager : MonoBehaviour {
         mediator.OnCardPlayedFromHand += Handler_OnCardPlayedFromHand;
         mediator.OnCardReturnedToHand += EventHandler_OnCardReturnedToHand;
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
+        mediator.OnStartOfTurn += Handler_OnStartOfTurn;
     }
 
+    private void Handler_OnStartOfTurn(GameState state) {
+
+        Transform board = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
+
+        foreach (Transform t in board) {
+            t.GetComponent<CardView_OnBoard>().ToggleSummoningSickness();
+        }
+    }
 
     private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
 

@@ -17,13 +17,13 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
         Attack = attack;
         Health = health;
-        AttacksPerTurn = 1;
+        AttacksPerTurn = 0;
     }
     public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health) : base(id, name, cost, artwork) {
 
         Attack = attack;
         Health = health;
-        AttacksPerTurn = 1;
+        AttacksPerTurn = 0;
     }
 
     public override string ToString() {
@@ -43,5 +43,9 @@ public class CreatureRuntimeCardData : RuntimeCardData {
             s += keyword.Type.ToString() + " ";
         } return s;
 ;
+    }
+
+    public void ResetAttackStatus () {
+        AttacksPerTurn++;
     }
 }

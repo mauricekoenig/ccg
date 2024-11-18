@@ -37,7 +37,7 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
         switch (villain.ability.type) {
 
             case VillainAbilityType.Summon:
-                if (state.ActivePlayer.CardsOnBoard > 4) return;
+                if (state.ActivePlayer.NumberOfCardsOnBoard > 4) return;
                 HandleSummonAbility(state, villain);
             break;
 

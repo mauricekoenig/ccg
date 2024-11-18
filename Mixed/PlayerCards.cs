@@ -24,7 +24,7 @@ public class PlayerCards : MonoBehaviour, IIdentifiable {
 
     public List<RuntimeCardData> Deck => deck;
 
-    public int OnBoard => inPlay.Count;
+    public int NumberOfCardsOnBoard => inPlay.Count;
 
     public int ID => this.id;
 
@@ -33,6 +33,18 @@ public class PlayerCards : MonoBehaviour, IIdentifiable {
         ClearAllZones();
         this.cardDeck = deck;
         this.deck.AddRange(deck.Cards);
+    }
+
+    public List<CreatureRuntimeCardData> GetCreaturesInPlay() {
+
+        List<CreatureRuntimeCardData> creatures = new();
+
+        foreach (var card in this.inPlay) {
+            if (card is not CreatureRuntimeCardData) continue;
+            creatures.Add(card as CreatureRuntimeCardData);
+        }
+
+        return creatures;
     }
 
     public void AddCardToZone (RuntimeCardData card, CardZone zone) {

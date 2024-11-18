@@ -18,7 +18,7 @@ public class CardInteraction_Hand : ICardInteraction {
     public void LeftClick (GameState gameState, ICardView view) {
 
         if (gameState.ActivePlayer.ID != view.ID) return;
-        if (gameState.ActivePlayer.CardsOnBoard > 4) return;
+        if (gameState.ActivePlayer.NumberOfCardsOnBoard > 4) return;
 
         if (gameState.ActivePlayer.resources.currentMana >= this.cardView.Data.Cost) {
 

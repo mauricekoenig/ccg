@@ -41,6 +41,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     private InterruptionZones interruptionZones;
     private IAnimationManager animationManager;
     private IPlayerManager playerManager;
+    private IBoardManager boardManager;
 
     public event Action<GameState> OnStartOfTurn;
     public event Action<GameState> OnEndOfTurn;
@@ -66,11 +67,12 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         interruptionZones = GetComponent<InterruptionZones>();
         animationManager = GetComponent<IAnimationManager>();
         playerManager = GetComponent<IPlayerManager>();
+        boardManager = GetComponent<IBoardManager>();
     }
 
     private void Start () {
 
-        inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView;
+        inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView_InHand;
         inputManager.OnRightClickedCardView += Handler_RightClickedCardView;
 
         turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
@@ -116,6 +118,8 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         this.gameState = new GameState(this.turnManager);
         this.gameState.OnChanged += HandleInternalGameStateChange;
 
+        this.boardManager.Init(GetGameState());
+
         this.uiManager.CreateVillains(this.gameState);
         this.turnManager.DrawStartHand();
 
@@ -152,7 +156,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     }
 
     // HANDLER - InputManager
-    public void Handler_LeftClickedCardView (ICardView cardView) {
+    public void Handler_LeftClickedCardView_InHand (ICardView cardView) {
 
         cardView.Interact(GetGameState(), cardView, InputAction.LeftMouse);
     }
@@ -222,13 +226,15 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
                 break;
 
             case GameStateChangeReason.Input_LeftClickedOnCardInPlay:
+
+                if (!this.boardManager.CanAttack(data.affectedView)) break;
                 this.targetingManager.StartTargeting(data.affectedView);
                 break;
 
             case GameStateChangeReason.Input_LeftClickedOnCardInPlay_WhileTargeting:
                 // Attack.
                 this.targetingManager.EndTargeting();
-                this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);      
+                this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);
                 break;
         }
 

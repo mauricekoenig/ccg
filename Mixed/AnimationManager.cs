@@ -28,6 +28,14 @@ public class AnimationManager : MonoBehaviour, IAnimationManager {
             Append(attacker.Transform.DOMove(defender.Transform.position, .3f)).
             AppendCallback(() => { damageIndicator.Show(attacker_creature.Attack, defender.Transform.position); }).
             Append(attacker.Transform.DOMove(origin, .3f)).
-            AppendCallback(() => { damageIndicator.Hide(); attacker.Canvas.sortingOrder = 0; isAnimating = false; });
+            AppendCallback(() => { 
+
+                damageIndicator.Hide(); 
+                attacker.Canvas.sortingOrder = 0; 
+                isAnimating = false;
+                attacker_creature.AttacksPerTurn--;
+                var attacker_creature_view = attacker as CardView_OnBoard;
+                attacker_creature_view.ToggleSummoningSickness();
+            });
     }
 }

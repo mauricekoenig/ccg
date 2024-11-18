@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, IIdentifiable {
     public int Health => health;
     public int ID => id;
 
-    public int CardsOnBoard => cards.OnBoard;
+    public int NumberOfCardsOnBoard => cards.NumberOfCardsOnBoard;
     public int CurrentMana => resources.currentMana;
 
     public PlayerCards cards;
@@ -49,6 +49,18 @@ public class Player : MonoBehaviour, IIdentifiable {
     public void AddCardToBoard (RuntimeCardData data) {
 
         cards.AddCardToZone(data, CardZone.Play);
+    }
+
+    public List<CreatureRuntimeCardData> GetCreaturesInPlay () {
+        return this.cards.GetCreaturesInPlay();
+    }
+
+    public void ResetAttackStatusForCreaturesInPlay () {
+
+        var creatures = this.cards.GetCreaturesInPlay();
+        foreach (var creature in creatures) {
+            creature.ResetAttackStatus();
+        }
     }
 
     public RuntimeCardData DrawCard () {
