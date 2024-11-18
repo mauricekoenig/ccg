@@ -14,6 +14,11 @@
 
 ![screenshot1 game](gif_targeting.gif)
 
+
+<h3>Targeting / Battle (18.11.2024) </h3>
+
+![screenshot1 game](gif_battle.gif)
+
 <h3>Gameplay (Updated)</h3>
 
 ![screenshot2 game](screen_gameplay2.png)
