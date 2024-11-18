@@ -1,12 +1,16 @@
 ﻿
 
 
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
 
+    public bool IsAnimating { get; set; }
+
+    [SerializeField] private GameObject cardView_OnBoard_Prefab;
     [SerializeField] private Transform cardViewPoolParent;
     [SerializeField] private Transform handView1;
     [SerializeField] private Transform handView2;
@@ -29,12 +33,12 @@ public class CardViewManager : MonoBehaviour {
     public CardViewManagerLayoutSettings layoutSettings;
     public GameObject cardViewPrefab;
 
-    public event Action<GameState, CardView3D> OnCardMovedToPlayZone;
+    public event Action<GameState, ICardView> OnCardMovedToPlayZone;
 
     private void Awake() {
 
-        mediator = GetComponent<IMediator>();
-        targetingManager = GetComponent<ITargetingManager>();
+        this.mediator = GetComponent<IMediator>();
+        this.targetingManager = GetComponent<ITargetingManager>();
         CreateCardViewPool(layoutSettings.CardViewPoolSize);
     }
     private void Start() {
@@ -43,14 +47,27 @@ public class CardViewManager : MonoBehaviour {
         mediator.OnCardPlayedFromHand += Handler_OnCardPlayedFromHand;
         mediator.OnCardReturnedToHand += EventHandler_OnCardReturnedToHand;
         mediator.OnCardInFindWindowSelected += Handler_OnCardInFindWindowSelected;
+        mediator.OnStartOfTurn += Handler_OnStartOfTurn;
     }
 
-    private void Handler_OnCardPlayedFromHand (GameState state, CardView3D cardView) {
+    private void Handler_OnStartOfTurn(GameState state) {
+
+        Transform board = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
+
+        foreach (Transform t in board) {
+            Debug.Log(t.name);
+            t.GetComponent<CardView_OnBoard>().ToggleSummoningSickness();
+        }
+    }
+
+    private void Handler_OnCardPlayedFromHand (GameState state, ICardView cardView) {
 
         Transform boardView = state.ActivePlayer.ID == 1 ? boardView1 : boardView2;
-        cardView.gameObject.transform.SetParent(boardView);
-        // ANIMATION LOGIC HERE
-        cardView.SetInteractionLogic(new CardInteraction_Play(cardView));
+        ICardView view = Instantiate(cardView_OnBoard_Prefab, boardView).GetComponent<ICardView>();
+        view.Init(state.ActivePlayer.ID, state, cardView.Data, new CardInteraction_Play(view));
+
+        cardView.Transform.SetParent(cardView.Transform.root); 
+        Destroy(cardView.Transform.gameObject);
 
         UpdateHand (state.ActivePlayer.ID);
         UpdateBoard (state.ActivePlayer.ID);
@@ -62,15 +79,15 @@ public class CardViewManager : MonoBehaviour {
         CardViewOwner owner = state.ActivePlayer.ID == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
         Transform cardHolder = state.ActivePlayer.ID == 1 ? handView1 : handView2;
         CardView3D cardView = CreateCardView(data, owner, cardHolder);
-        cardView.Init(state, data, new CardInteraction_Hand(cardView));
+        cardView.Init(state.ActivePlayer.ID, state, data, new CardInteraction_Hand(cardView));
 
         UpdateHand(state.ActivePlayer.ID);
     }
 
-    public void EventHandler_OnCardReturnedToHand (GameState state, CardView3D cardView) {
+    public void EventHandler_OnCardReturnedToHand (GameState state, ICardView cardView) {
 
         Transform handView = state.ActivePlayer.ID == 1 ? handView1 : handView2;
-        cardView.gameObject.transform.SetParent(handView);
+        cardView.Transform.SetParent(handView);
 
         UpdateHand(state.ActivePlayer.ID);
         UpdateBoard(state.ActivePlayer.ID);
@@ -82,7 +99,7 @@ public class CardViewManager : MonoBehaviour {
         CardViewOwner owner = id == 1 ? CardViewOwner.Local : CardViewOwner.Remote;
 
         CardView3D cardView = CreateCardView (data, owner, hand);
-        cardView.Init(state,data, new CardInteraction_Hand(cardView));
+        cardView.Init(playerID, state,data, new CardInteraction_Hand(cardView));
         UpdateHand(id);
     }
     public void EventHandler_OnCardMovedToGraveyard (GameState state) {
@@ -167,10 +184,7 @@ public class CardViewManager : MonoBehaviour {
         view.transform.position = new Vector3(-100, -100, 0);
         view.ResetView();
         cardViewPool.Enqueue(view.gameObject);
-
-        #if UNITY_EDITOR
-                cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
-        #endif
+        cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
     }
 
     private Quaternion GetCardRotation(CardViewOwner owner) {

@@ -9,8 +9,8 @@ public interface IMediator {
     event Action <GameState> OnEndOfTurn;
 
     event Action <GameState, RuntimeCardData, int> OnPlayerDrawCard;
-    event Action <GameState, CardView3D> OnCardPlayedFromHand;
-    event Action <GameState, CardView3D> OnCardReturnedToHand;
+    event Action <GameState, ICardView> OnCardPlayedFromHand;
+    event Action <GameState, ICardView> OnCardReturnedToHand;
     event Action <GameState, CardPool> OnFindEffectTriggered;
     event Action <GameState, RuntimeCardData> OnCardInFindWindowSelected;
     event Action <GameState, Villain> OnVillainAbilityClicked;
@@ -19,7 +19,4 @@ public interface IMediator {
     void StartGame();
     void EndPlayerTurn();
     void DrawForActivePlayer();
-    void DiscardRandomCard();
-    void PlayRandomCardFromHand();
-    bool CardIsPlayable(RuntimeCardData card);
 }

@@ -13,37 +13,42 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(EffectManager))]
 [RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(VillainAbilityManager))]
+[RequireComponent(typeof(TargetingManager))]
+[RequireComponent(typeof(AnimationManager))]
+[RequireComponent(typeof(PlayerManager))]
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
+
     private bool gameStarted;
-    public List<Player> playerList = new();
+
     public GameData gameData;
+    private ICardDeck testDeck1;
+    private ICardDeck testDeck2;
 
+    public Player player1;
+    public Player player2;
 
-    ICardDeck testDeck1;
-    ICardDeck testDeck2;
-
-    Player currentPlayer;
-    Player nonCurrentPlayer;
-
-    CardViewManager cardViewManager;
-
-    internal GameState gameState;
-    internal IInputManager inputManager;
-    internal ITurnManager turnManager;
-    internal IEffectManager effectManager;
-    internal IUIManager uiManager;
-    internal IVillainAbilityManager villainAbilityManager;
-    internal IPreLoader preLoader;
-    internal ITargetingManager targetingManager;
+    private CardViewManager cardViewManager;
+    private GameState gameState;
+    private IInputManager inputManager;
+    private ITurnManager turnManager;
+    private IEffectManager effectManager;
+    private IUIManager uiManager;
+    private IVillainAbilityManager villainAbilityManager;
+    private IPreLoader preLoader;
+    private ITargetingManager targetingManager;
+    private InterruptionZones interruptionZones;
+    private IAnimationManager animationManager;
+    private IPlayerManager playerManager;
+    private IBoardManager boardManager;
 
     public event Action<GameState> OnStartOfTurn;
     public event Action<GameState> OnEndOfTurn;
     public event Action<GameState> OnGameStateChanged;
 
-    public event Action<GameState, CardView3D> OnCardPlayedFromHand;
-    public event Action<GameState, CardView3D> OnCardReturnedToHand;
+    public event Action<GameState, ICardView> OnCardPlayedFromHand;
+    public event Action<GameState, ICardView> OnCardReturnedToHand;
     public event Action<GameState, RuntimeCardData, int> OnPlayerDrawCard;
     public event Action<GameState, CardPool> OnFindEffectTriggered;
     public event Action<GameState, RuntimeCardData> OnCardInFindWindowSelected;
@@ -59,12 +64,16 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         villainAbilityManager = GetComponent<IVillainAbilityManager>();
         preLoader = GetComponent<IPreLoader>();
         targetingManager = GetComponent<ITargetingManager>();
+        interruptionZones = GetComponent<InterruptionZones>();
+        animationManager = GetComponent<IAnimationManager>();
+        playerManager = GetComponent<IPlayerManager>();
+        boardManager = GetComponent<IBoardManager>();
     }
 
     private void Start () {
 
-        inputManager.ON_LeftClickedCardView += Handler_LeftClickedCardView;
-        inputManager.ON_RightClickedCardView += Handler_RightClickedCardView;
+        inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView_InHand;
+        inputManager.OnRightClickedCardView += Handler_RightClickedCardView;
 
         turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
         turnManager.OnEndOfTurn += Handler_OnEndOfTurn;
@@ -74,7 +83,15 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         villainAbilityManager.OnVillainAbilityHandled += Handler_OnVillainAbilityHandled;
 
+        interruptionZones.OnInterruptionZoneEntered += Handler_OnInterruptionZoneEntered;
+
     }
+
+
+    private void Handler_OnInterruptionZoneEntered() {
+        this.targetingManager.EndTargeting();
+    }
+
     public GameState GetGameState () {
         return this.gameState;
     }
@@ -94,19 +111,14 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
             RuntimeGameData.Initialized = true;
         }
 
-        testDeck1 = gameData.runtimeGameData.GetTestDeck();
-        testDeck2 = gameData.runtimeGameData.GetTestDeck();
-
-        for (int i = 0; i < playerList.Count; i++) {  
-            
-            if ((i + 1) == 1) playerList[i].Init(i + 1, testDeck1, testDeck1.Villain);
-            else              playerList[i].Init(i+1, testDeck2, testDeck2.Villain);
-        }
-
-        this.turnManager.Init(playerList);
+        this.playerManager.Init(player1, player2); 
+        this.turnManager.Init(this.playerManager.PlayerList);
         this.villainAbilityManager.Init(this);
+
         this.gameState = new GameState(this.turnManager);
         this.gameState.OnChanged += HandleInternalGameStateChange;
+
+        this.boardManager.Init(GetGameState());
 
         this.uiManager.CreateVillains(this.gameState);
         this.turnManager.DrawStartHand();
@@ -127,47 +139,10 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
         Invoke_GameStateChanged();
         OnPlayerDrawCard?.Invoke(GetGameState(), data, turnManager.ActivePlayer.ID);
     }
-    public void DiscardRandomCard () {
 
-        if (currentPlayer.cards.HandSize == 0) return;
-        RuntimeCardData randomCard = currentPlayer.cards.GetRandomCardInHand();
-        currentPlayer.cards.MoveCardBetweenZones(randomCard, CardZone.Hand, CardZone.Graveyard);
-        Invoke_GameStateChanged();
-
-
-    }
-    public void PlayRandomCardFromHand () {
-
-        if (currentPlayer.cards.HandSize == 0) return;
-        RuntimeCardData card = currentPlayer.cards.GetRandomCardInHand();
-        currentPlayer.cards.MoveCardBetweenZones(card, CardZone.Hand, CardZone.Play);
-
-        if (card is CreatureRuntimeCardData) {
-
-            CreatureRuntimeCardData creature = card as CreatureRuntimeCardData;
-
-            foreach (var effect in creature.Effects) {
-                foreach (var trigger in effect.triggers) {
-                    if (trigger == EffectTrigger.Play) {
-                        effect.Apply(GetGameState());
-                    }
-                }
-            }
-
-            Debug.Log("Played a creature!");
-        }
-
-        if (card is SpellRuntimeCardData) {
-
-            SpellRuntimeCardData spell = card as SpellRuntimeCardData;
-            Debug.Log("Played a spell!");
-        }
-
-        Invoke_GameStateChanged();
-    }
     public void MaxMana() {
 
-        foreach (var player in playerList) {
+        foreach (var player in this.playerManager.PlayerList) {
             player.resources.currentMana = player.resources.maxMana;
         }
 
@@ -181,24 +156,23 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     }
 
     // HANDLER - InputManager
-    public void Handler_LeftClickedCardView (CardView3D cardView) {
+    public void Handler_LeftClickedCardView_InHand (ICardView cardView) {
 
-        cardView.Interact(GetGameState(), InputAction.LeftMouse);
+        cardView.Interact(GetGameState(), cardView, InputAction.LeftMouse);
     }
-    public void Handler_RightClickedCardView (CardView3D cardView) {
+    public void Handler_RightClickedCardView (ICardView cardView) {
 
-        cardView.Interact(GetGameState(), InputAction.RightMouse);
+        cardView.Interact(GetGameState(), cardView, InputAction.RightMouse);
         return;
+    }
+    public void Handler_OnRightClickWhileTargeting () {
 
-        /*
-        if (cardView.viewPosition == CardZone.Hand) return;
-        CardZone from = CardZone.Play;
-        CardZone to = CardZone.Hand;
-        currentPlayer.cards.MoveCardBetweenZones(cardView.data, from, to);
-        cardView.SetZone(CardZone.Hand);
-        Invoke_GameStateChanged();
-        Invoke_OnCardReturnedToHand(cardView);
-        */
+        Debug.Log("Right Clicked while targeting!");
+        this.targetingManager.EndTargeting();
+    }
+    private void Handler_OnLeftClickWhileTargeting() {
+
+        Debug.Log("Left Clicked while targeting!");
     }
 
     // HANDLER - TurnManager
@@ -211,14 +185,13 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     public void Handler_OnCardDraw (RuntimeCardData cardRuntimeData, int id) {
         OnPlayerDrawCard?.Invoke(GetGameState(), cardRuntimeData, id);
     }
-    public void Handler_OnCardViewMovedToPlayZone (GameState state, CardView3D cardView) {
+    public void Handler_OnCardViewMovedToPlayZone (GameState state, ICardView cardView) {
 
-        if (!cardView.data.HasEffect()) {
-            Debug.Log("Played a card without an effect.");
+        if (!cardView.Data.HasEffect()) {
             return;
         }
 
-        effectManager.Handle(cardView.data);
+        effectManager.Handle(cardView.Data);
     }
 
     // HANDLER - VillainAbilityManager
@@ -228,6 +201,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
     // HANDLER - GameState
     public void HandleInternalGameStateChange (GameStateChangeReason change, GameStateChangeData data) {
+
 
         switch (change) {
 
@@ -250,6 +224,21 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
             case GameStateChangeReason.Input_ClickedOnVillainAbility:
                 OnVillainAbilityClicked?.Invoke(GetGameState(), data.villain);
                 break;
+
+            case GameStateChangeReason.Input_LeftClickedOnCardInPlay:
+
+                if (!this.boardManager.CanAttack(data.affectedView)) break;
+                this.targetingManager.StartTargeting(data.affectedView);
+                break;
+
+            case GameStateChangeReason.Input_LeftClickedOnCardInPlay_WhileTargeting:
+                // Attack.
+                this.targetingManager.EndTargeting();
+                this.animationManager.Attack(TargetingManager.CurrentViewTargeting, data.affectedView);
+                break;
+
+            case GameStateChangeReason.Battle_CreatureDied:
+                break;
         }
 
         Invoke_GameStateChanged();
@@ -258,9 +247,5 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
     // UTILITY
     public void ResetScene () {
         SceneManager.LoadScene(0);
-    }
-    public bool CardIsPlayable (RuntimeCardData data) {
-
-        return currentPlayer.resources.currentMana >= data.Cost;
     }
 }

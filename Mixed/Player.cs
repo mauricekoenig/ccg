@@ -8,7 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerCards))]
 [RequireComponent (typeof(PlayerResources))]
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IIdentifiable {
 
     private int id;
     private int health;
@@ -19,11 +19,11 @@ public class Player : MonoBehaviour {
     public int Health => health;
     public int ID => id;
 
-    public int CardsOnBoard => cards.OnBoard;
+    public int NumberOfCardsOnBoard => cards.NumberOfCardsOnBoard;
     public int CurrentMana => resources.currentMana;
 
     public PlayerCards cards;
-    public  PlayerResources resources;
+    public PlayerResources resources;
 
     private void Start() {
 
@@ -46,15 +46,27 @@ public class Player : MonoBehaviour {
     public void RemoveMana (int amount) {
         this.resources.Remove(amount);
     }
-
     public void AddCardToBoard (RuntimeCardData data) {
 
         cards.AddCardToZone(data, CardZone.Play);
     }
 
+    public List<CreatureRuntimeCardData> GetCreaturesInPlay () {
+        return this.cards.GetCreaturesInPlay();
+    }
+
+    public void ResetAttacksPerTurn () {
+
+        var creatures = this.cards.GetCreaturesInPlay();
+        foreach (var creature in creatures) {
+            creature.ResetAttacksPerTurn();
+        }
+    }
+
     public RuntimeCardData DrawCard () {
 
         if (cards.Deck.Count <= 0) return null;
-        return cards.DrawCardFromDeck();
+        var card = this.cards.DrawCardFromDeck();
+        return card;
     }
 }

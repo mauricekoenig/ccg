@@ -1,28 +1,39 @@
 ﻿
-
-
-
+using UnityEngine;
 
 public class CardInteraction_Play : ICardInteraction {
 
-    private CardView3D cardView;
+    private ICardView cardView;
 
-    public CardInteraction_Play(CardView3D view) {
+    public CardInteraction_Play(ICardView view) {
 
         this.cardView = view;
         this.cardView.SetZone(CardZone.Play);
     }
 
-    public void LeftClick (GameState gameState) {
+    public void LeftClick (GameState gameState, ICardView view) {
 
-        gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnFriendlyCardInPlay, null);
+        var changeData = GameStateChangeData.New(gameState);
+
+        if (TargetingManager.IsTargeting) {
+
+            if (TargetingManager.CurrentViewTargeting.ID == this.cardView.ID) {
+                return;
+            }
+
+            changeData.affectedView = this.cardView;
+            gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnCardInPlay_WhileTargeting, changeData);
+            return;
+        }
+
+        changeData.affectedView = this.cardView;
+        gameState.NotifyStateChange(GameStateChangeReason.Input_LeftClickedOnCardInPlay, changeData);
     }
 
-    public void RightClick(GameState gameState) {
-        
+    public void RightClick (GameState gameState, ICardView view) {
 
     }
-    public void MiddleClick(GameState gameState) {
+    public void MiddleClick(GameState gameState, ICardView view) {
         
 
     }

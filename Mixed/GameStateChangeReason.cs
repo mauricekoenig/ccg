@@ -10,5 +10,11 @@ public enum GameStateChangeReason {
 
     Input_ClickedOnCardInFindWindow,
     Input_ClickedOnVillainAbility,
-    Input_LeftClickedOnFriendlyCardInPlay
+
+    Input_LeftClickedOnCardInPlay,
+    Input_LeftClickedOnCardInPlay_WhileTargeting,
+    Input_RightClickedOnCard,
+    Input_RightClickedOnCardWhileTargeting,
+
+    Battle_CreatureDied
 }

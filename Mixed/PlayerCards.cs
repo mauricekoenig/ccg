@@ -5,8 +5,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class PlayerCards : MonoBehaviour {
+public class PlayerCards : MonoBehaviour, IIdentifiable {
 
+    private int id;
     private ICardDeck cardDeck;
 
     [SerializeField] private List<RuntimeCardData> deck = new();
@@ -23,13 +24,27 @@ public class PlayerCards : MonoBehaviour {
 
     public List<RuntimeCardData> Deck => deck;
 
-    public int OnBoard => inPlay.Count;
+    public int NumberOfCardsOnBoard => inPlay.Count;
+
+    public int ID => this.id;
 
     public void Init (ICardDeck deck) {
 
         ClearAllZones();
         this.cardDeck = deck;
         this.deck.AddRange(deck.Cards);
+    }
+
+    public List<CreatureRuntimeCardData> GetCreaturesInPlay() {
+
+        List<CreatureRuntimeCardData> creatures = new();
+
+        foreach (var card in this.inPlay) {
+            if (card is not CreatureRuntimeCardData) continue;
+            creatures.Add(card as CreatureRuntimeCardData);
+        }
+
+        return creatures;
     }
 
     public void AddCardToZone (RuntimeCardData card, CardZone zone) {

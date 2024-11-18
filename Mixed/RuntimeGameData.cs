@@ -90,8 +90,15 @@ public class RuntimeGameData {
         foreach (var villain in villains) allVillains.Add(villain);
     }
 
-    public RuntimeCardDeck GetTestDeck() {
-        return new RuntimeCardDeck("Test Deck", allCards.ToList(), gameDataContainer.TestVillain);
+    public RuntimeCardDeck GetTestDeck () {
+
+        List<RuntimeCardData> copiedData = new();
+
+        foreach (var card in allCards) {
+            copiedData.Add(card.Clone());
+        }
+
+        return new RuntimeCardDeck("Test Deck", copiedData.ToList(), gameDataContainer.TestVillain);
     }
 
     public void PrintAll () {

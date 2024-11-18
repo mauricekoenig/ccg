@@ -7,22 +7,23 @@ using UnityEngine;
 
 public class CardInteraction_Hand : ICardInteraction {
 
-    private CardView3D cardView;
+    private ICardView cardView;
 
-    public CardInteraction_Hand(CardView3D view) {
+    public CardInteraction_Hand(ICardView view) {
 
         this.cardView = view;
         this.cardView.SetZone(CardZone.Hand);
     }
 
-    public void LeftClick (GameState gameState) {
+    public void LeftClick (GameState gameState, ICardView view) {
 
-        if (gameState.ActivePlayer.CardsOnBoard > 4) return;
+        if (gameState.ActivePlayer.ID != view.ID) return;
+        if (gameState.ActivePlayer.NumberOfCardsOnBoard > 4) return;
 
-        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.data.Cost) {
+        if (gameState.ActivePlayer.resources.currentMana >= this.cardView.Data.Cost) {
 
-            gameState.ActivePlayer.cards.MoveCardBetweenZones(cardView.data, CardZone.Hand, CardZone.Play);
-            gameState.ActivePlayer.resources.currentMana -= cardView.data.Cost;
+            gameState.ActivePlayer.cards.MoveCardBetweenZones(cardView.Data, CardZone.Hand, CardZone.Play);
+            gameState.ActivePlayer.resources.currentMana -= cardView.Data.Cost;
 
             var changeData = GameStateChangeData.New(gameState);
             changeData.affectedView = this.cardView;
@@ -30,11 +31,11 @@ public class CardInteraction_Hand : ICardInteraction {
             gameState.NotifyStateChange(GameStateChangeReason.Action_PlayedCardFromHand, changeData) ;
         }
     }
-    public void RightClick(GameState gameState) {
+    public void RightClick(GameState gameState, ICardView view) {
         
 
     }
-    public void MiddleClick(GameState gameState) {
+    public void MiddleClick(GameState gameState, ICardView view) {
         
 
     }

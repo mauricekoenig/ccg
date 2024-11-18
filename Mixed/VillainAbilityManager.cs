@@ -37,7 +37,7 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
         switch (villain.ability.type) {
 
             case VillainAbilityType.Summon:
-                if (state.ActivePlayer.CardsOnBoard > 4) return;
+                if (state.ActivePlayer.NumberOfCardsOnBoard > 4) return;
                 HandleSummonAbility(state, villain);
             break;
 
@@ -70,7 +70,7 @@ public class VillainAbilityManager : MonoBehaviour, IVillainAbilityManager {
 
             state.ActivePlayer.AddCardToBoard(creatureData);
             var cardView = cardViewManager.CreateCardView(creatureData, owner, parent);
-            cardView.Init(state,creatureData, new CardInteraction_Play(cardView));
+            cardView.Init(state.ActivePlayer.ID, state,creatureData, new CardInteraction_Play(cardView));
         }
 
         this.cardViewManager.UpdateBoard(state.ActivePlayer.ID);

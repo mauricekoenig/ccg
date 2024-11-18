@@ -13,11 +13,13 @@ public class DevInputManager : MonoBehaviour, IInputManager {
     public LayerMask cardViewLayer;
     public bool raycast;
 
-    public event Action<CardView3D> ON_LeftClickedCardView;
-    public event Action<CardView3D> ON_RightClickedCardView;
+    public event Action<ICardView> OnLeftClickedCardView;
+    public event Action<ICardView> OnRightClickedCardView;
+
+    private ICardView lastSelection;
 
     private void Start () {
-
+        
         mainCam = Camera.main;
         mediator = GetComponent<IMediator>();
     }
@@ -27,10 +29,12 @@ public class DevInputManager : MonoBehaviour, IInputManager {
         if (!raycast) return;
 
         if (Input.GetMouseButtonDown(0)) {
+
             OnLeftMouseDown();
         }
 
         if (Input.GetMouseButtonDown(1)) {
+
             OnRightMouseDown();
         }
     }
@@ -38,9 +42,10 @@ public class DevInputManager : MonoBehaviour, IInputManager {
      public void OnLeftMouseDown() {
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
-             
-            CardView3D view = hit.collider.gameObject.GetComponent<CardView3D>();
-            ON_LeftClickedCardView?.Invoke(view);
+            
+            ICardView view = hit.collider.gameObject.GetComponent<ICardView>();
+            this.lastSelection = view;
+            OnLeftClickedCardView?.Invoke(view);
         }
     }
 
@@ -48,8 +53,9 @@ public class DevInputManager : MonoBehaviour, IInputManager {
 
         if (Physics.Raycast(GetMouseRay(), out RaycastHit hit, 50, cardViewLayer)) {
 
-            CardView3D view = hit.collider.gameObject.GetComponent<CardView3D>();
-            ON_RightClickedCardView?.Invoke(view);
+            ICardView view = hit.collider.gameObject.GetComponent<ICardView>();
+            this.lastSelection = view;
+            OnRightClickedCardView?.Invoke(view);
         }
     }
 

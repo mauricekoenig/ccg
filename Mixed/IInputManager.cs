@@ -7,8 +7,8 @@ using UnityEngine;
 
 public interface IInputManager {
 
-    event Action <CardView3D> ON_LeftClickedCardView;
-    event Action <CardView3D> ON_RightClickedCardView;
+    event Action <ICardView> OnLeftClickedCardView;
+    event Action <ICardView> OnRightClickedCardView;
 
     public void OnLeftMouseDown();
     public void OnRightMouseDown();

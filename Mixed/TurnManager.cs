@@ -46,16 +46,18 @@ public class TurnManager : MonoBehaviour, ITurnManager {
         turns++;
         ActivePlayer.AddMana(1);
         DrawCard(ActivePlayer);
+        ActivePlayer.ResetAttacksPerTurn();
         OnStartOfTurn?.Invoke();
     }
 
     public void DrawStartHand() {
+
         turns++;
         ActivePlayer.AddMana(1);
-        for (int i = 0; i < 3; i++) {
-            DrawCard(ActivePlayer);
-            DrawCard(WaitingPlayer);
-        }
+
+        for (int i = 0; i < 3; i++) DrawCard (GetPlayerById(1));
+        for (int i = 0; i < 3; i++) DrawCard (GetPlayerById(2));
+
         OnStartOfTurn?.Invoke();
     }
 
