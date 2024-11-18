@@ -74,6 +74,7 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
 
         inputManager.OnLeftClickedCardView += Handler_LeftClickedCardView_InHand;
         inputManager.OnRightClickedCardView += Handler_RightClickedCardView;
+        inputManager.OnRightClickWhileTargeting += Handler_OnRightClickWhileTargeting;
 
         turnManager.OnStartOfTurn += Handler_OnStartOfTurn;
         turnManager.OnEndOfTurn += Handler_OnEndOfTurn;

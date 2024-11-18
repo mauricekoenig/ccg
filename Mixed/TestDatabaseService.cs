@@ -84,8 +84,9 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
                             string base64 = reader.GetString(reader.GetOrdinal("Artwork"));
                             int attack = reader.GetInt32(reader.GetOrdinal("Attack"));
                             int health = reader.GetInt32(reader.GetOrdinal("HP"));
+                            string color = reader.GetString(reader.GetOrdinal("Color"));
 
-                            var creatureData = new CreatureRuntimeCardData(id, name, cost, base64, attack, health);
+                            var creatureData = new CreatureRuntimeCardData(id, name, cost, base64, attack, health, color);
                             set.Add(creatureData);
                         }
 

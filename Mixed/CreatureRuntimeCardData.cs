@@ -23,13 +23,13 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     public event Action<CreatureRuntimeCardData> OnAttackChanged;
     public event Action OnAttacksPerTurnChanged;
 
-    public CreatureRuntimeCardData (int id, string name, int cost, string artworkBase64, int attack, int health) : base (id, name, cost, artworkBase64) {
+    public CreatureRuntimeCardData(int id, string name, int cost, string artworkBase64, int attack, int health, string color) : base(id, name, cost, artworkBase64, color) {
 
         Attack = attack;
         Health = health;
         AttacksPerTurn = 0;
     }
-    public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health) : base(id, name, cost, artwork) {
+    public CreatureRuntimeCardData(int id, string name, int cost, Sprite artwork, int attack, int health, string color) : base(id, name, cost, artwork, color) {
 
         Attack = attack;
         Health = health;
@@ -42,7 +42,7 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public override RuntimeCardData Clone() {
 
-        return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health);
+        return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health, this.Color);
     }
 
     public string GetKeywordString () {
