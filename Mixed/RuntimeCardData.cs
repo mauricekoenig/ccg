@@ -15,6 +15,7 @@ public abstract class RuntimeCardData : IIdentifiable {
     public CardRarity Rarity { get; set; }
     public string ArtworkBase64 { get; set; }
     public string Color { get; set; }
+    public HashSet<Keyword> Keywords { get; set; } = new();
 
     public HashSet<BaseEffect> Effects { get; set; }
 

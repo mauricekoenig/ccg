@@ -33,7 +33,6 @@ public class GraveyardManager : MonoBehaviour, IGraveyardManager {
 
     private void Handler_OnCardMovedToGraveyard (int id, RuntimeCardData data) {
 
-        Debug.Log($"{data.Name} with ID {id.ToString()} moved to graveyard!");
         Transform panel = id == 1 ? graveyardWindow_Content_1 : graveyardWindow_Content_2;
         var view = CreateView(data);
         view.transform.SetParent(panel);

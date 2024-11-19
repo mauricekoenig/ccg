@@ -1,6 +1,7 @@
 ﻿
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,13 +76,35 @@ public class RuntimeGameData {
     }
     public void AssignKeywords (Dictionary<int, HashSet<int>> dictionary) {
 
-        foreach (var record in dictionary) {
-            var creature = this.GetCreatureById(record.Key);
-            foreach (var keyword_id in record.Value) {
-                var keyword = this.gameDataContainer.GetKeyword(keyword_id);
-                Debug.Log("Creature: " + creature.Name + " - " + "Keyword: " + keyword.Type.ToString());
-                keyword.Apply(creature);
+        try {
+
+            // entry.Key = CreatureID, entry.value = Dictionary
+            foreach (var entry in dictionary) {
+
+                CreatureRuntimeCardData creature = GetCreatureById(entry.Key);
+
+                if (creature == null) {
+                    Debug.Log("Creature is equal to null!");
+                    return;
+                }
+
+
+                foreach (var keywordID in entry.Value) {
+
+                    Keyword keyword = this.gameDataContainer.GetKeyword(keywordID);
+
+                    if (keyword == null) {
+                        Debug.Log("Keyword is equal to null!");
+                        continue;
+                    }
+
+                    keyword.Apply(creature);
+                }
             }
+        }
+
+        catch (Exception e) {
+            Debug.Log(e.Message);
         }
     }
 
