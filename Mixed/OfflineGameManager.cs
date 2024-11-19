@@ -19,7 +19,6 @@ using UnityEngine.SceneManagement;
 
 public class OfflineGameManager : MonoBehaviour, IMediator {
 
-
     private bool gameStarted;
 
     public GameData gameData;
@@ -111,14 +110,15 @@ public class OfflineGameManager : MonoBehaviour, IMediator {
             RuntimeGameData.Initialized = true;
         }
 
+        this.villainAbilityManager.Init(this);
+        this.boardManager.Init(GetGameState());
+
         this.playerManager.Init(player1, player2); 
         this.turnManager.Init(this.playerManager.PlayerList);
-        this.villainAbilityManager.Init(this);
 
         this.gameState = new GameState(this.turnManager);
         this.gameState.OnChanged += HandleInternalGameStateChange;
 
-        this.boardManager.Init(GetGameState());
 
         this.uiManager.CreateVillains(this.gameState);
         this.turnManager.DrawStartHand();

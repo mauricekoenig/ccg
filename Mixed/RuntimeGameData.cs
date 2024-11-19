@@ -1,6 +1,7 @@
 ﻿
 
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -71,6 +72,17 @@ public class RuntimeGameData {
     }
     public void AssignCards<T>(HashSet<T> cards) where T : RuntimeCardData {
         foreach (var card in cards) allCards.Add(card);
+    }
+    public void AssignKeywords (Dictionary<int, HashSet<int>> dictionary) {
+
+        foreach (var record in dictionary) {
+            var creature = this.GetCreatureById(record.Key);
+            foreach (var keyword_id in record.Value) {
+                var keyword = this.gameDataContainer.GetKeyword(keyword_id);
+                Debug.Log("Creature: " + creature.Name + " - " + "Keyword: " + keyword.Type.ToString());
+                keyword.Apply(creature);
+            }
+        }
     }
 
     public void LoadAllEffects() {

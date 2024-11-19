@@ -49,13 +49,4 @@ public class GameData : ScriptableObject {
         return this.runtimeGameData.GetVillainById(id);
     }
 
-    public void AssignKeywords(Dictionary<int, HashSet<int>> dictionary) {
-        foreach (var record in dictionary) {
-            var creature = this.runtimeGameData.GetCreatureById(record.Key);
-            foreach (var keyword_id in record.Value) {
-                var keyword = GetKeyword(keyword_id);
-                keyword.Apply(creature);
-            }
-        }
-    }
 }

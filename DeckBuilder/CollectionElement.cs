@@ -46,7 +46,7 @@ public class CollectionElement : MonoBehaviour, IPointerDownHandler
             creatureArtwork.sprite = creature.Artwork;
             this.attack.text = creature.Attack.ToString();
             this.health.text = creature.Health.ToString();
-            this.cardText.text = creature.GetKeywordString();
+            this.cardText.text = creature.GetAllKeywordsAsString();
             typePlate.text = "Creature"; // Need adjustments
         }
 

@@ -67,7 +67,7 @@ public class PreLoader : MonoBehaviour, IPreLoader {
 
     private void Handler_OnSelectAllKeywordAssociations(Dictionary<int, HashSet<int>> dictionary) {
 
-        gameData.AssignKeywords(dictionary);
+        gameData.runtimeGameData.AssignKeywords(dictionary);
     }
 }
 

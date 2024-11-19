@@ -103,13 +103,12 @@ public class CardView_OnBoard : MonoBehaviour, ICardView {
 
     public void Handler_OnHealthChanged (CreatureRuntimeCardData creatureData, bool creatureDied) {
 
-        int oldHealth = int.Parse(this.healthTmp.text);
 
-        if (creatureData.Health < oldHealth) {
+        if (creatureData.Health < creatureData.BaseHealth) {
             this.healthTmp.color = Color.red;
         }
 
-        if (creatureData.Health > oldHealth) {
+        if (creatureData.Health > creatureData.BaseHealth) {
             this.healthTmp.color = Color.green;
         }
 

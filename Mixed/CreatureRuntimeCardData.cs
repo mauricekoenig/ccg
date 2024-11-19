@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CreatureRuntimeCardData : RuntimeCardData {
@@ -31,6 +32,9 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     public event Action<CreatureRuntimeCardData, bool> OnHealthChanged;
     public event Action<CreatureRuntimeCardData> OnAttackChanged;
     public event Action OnAttacksPerTurnChanged;
+
+    public bool HasFlying => Keywords.Any(x => x.Type == KeywordType.Flying);
+    public bool HasBerserk => Keywords.Any(x => x.Type == KeywordType.Berserk);
 
     public CreatureRuntimeCardData(int id, string name, int cost, string artworkBase64, int attack, int health, string color) : base(id, name, cost, artworkBase64, color) {
 
@@ -62,7 +66,7 @@ public class CreatureRuntimeCardData : RuntimeCardData {
         return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health, this.Color);
     }
 
-    public string GetKeywordString () {
+    public string GetAllKeywordsAsString () {
 
         string s = "";
         foreach (var keyword in Keywords) {
@@ -73,13 +77,23 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     }
 
     public void PerformAttack (CreatureRuntimeCardData defendingCreature) {
-
+;
         if (this.AttacksPerTurn <= 0) return;
 
-        this.AttacksPerTurn--;
+        bool defendingCreatureWillDie = (defendingCreature.Health - this.Attack) <= 0;
+        bool attackerWillSurvive = (this.Health - defendingCreature.Attack) > 0;
 
-        this.Health -= defendingCreature.Attack;
+        if (this.HasBerserk && attackerWillSurvive && defendingCreatureWillDie) {
+
+            Debug.Log("Has Berserk!");
+            this.Health -= defendingCreature.Attack;
+            defendingCreature.Health -= this.Attack;
+            return;
+        }
+
         defendingCreature.Health -= this.Attack;
+        this.Health -= defendingCreature.Attack;
+        this.AttacksPerTurn--;
     }
 
     public void ResetAttacksPerTurn () {
