@@ -8,8 +8,10 @@ using UnityEngine;
 
 public class CardViewManager : MonoBehaviour {
 
+    
     public bool IsAnimating { get; set; }
 
+    [SerializeField] private GameData gameData;
     [SerializeField] private GameObject cardView_OnBoard_Prefab;
     [SerializeField] private Transform cardViewPoolParent;
     [SerializeField] private Transform handView1;
@@ -170,6 +172,7 @@ public class CardViewManager : MonoBehaviour {
             gameObject.transform.SetParent(parent);
             gameObject.transform.localRotation = GetCardRotation(owner);
             cardViewPoolParent.name = $"CardViewPool: {cardViewPoolParent.childCount}";
+
             return gameObject.GetComponent<CardView3D>();
         } 
         

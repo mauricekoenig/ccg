@@ -129,7 +129,10 @@ public class TestDatabaseService : MonoBehaviour, IDataBaseService {
                                 continue;
                             }
 
-                            keywordAssociations.Add(creatureID, new HashSet<int>() { keywordID});
+                            var hashSet = new HashSet<int>();
+                            hashSet.Add(keywordID);
+
+                            keywordAssociations.Add(creatureID, hashSet);
                         }
 
                         OnSelectAllKeywordAssociations?.Invoke(keywordAssociations);

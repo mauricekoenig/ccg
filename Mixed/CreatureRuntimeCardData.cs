@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CreatureRuntimeCardData : RuntimeCardData {
@@ -27,7 +28,6 @@ public class CreatureRuntimeCardData : RuntimeCardData {
     public int AttacksPerTurn { get { return this.attacksPerTurn; } set { this.attacksPerTurn = value; OnAttacksPerTurnChanged?.Invoke(); } }
 
     public HashSet<CreatureType> Types { get; set; } = new();
-    public HashSet<Keyword> Keywords { get; set; } = new();
 
     public event Action<CreatureRuntimeCardData, bool> OnHealthChanged;
     public event Action<CreatureRuntimeCardData> OnAttackChanged;
@@ -63,14 +63,15 @@ public class CreatureRuntimeCardData : RuntimeCardData {
 
     public override RuntimeCardData Clone() {
 
-        return new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health, this.Color);
+        var clone = new CreatureRuntimeCardData(this.ID, this.Name, this.Cost, this.Artwork, this.Attack, this.Health, this.Color);
+        clone.Keywords.AddRange(Keywords);
+        return clone;
     }
 
     public string GetAllKeywordsAsString () {
 
         string s = "";
         foreach (var keyword in Keywords) {
-            Debug.Log("Keyword: " + keyword.Type.ToString());
             s += keyword.Type.ToString() + " ";
         } return s;
 ;
@@ -83,9 +84,8 @@ public class CreatureRuntimeCardData : RuntimeCardData {
         bool defendingCreatureWillDie = (defendingCreature.Health - this.Attack) <= 0;
         bool attackerWillSurvive = (this.Health - defendingCreature.Attack) > 0;
 
-        if (this.HasBerserk && attackerWillSurvive && defendingCreatureWillDie) {
+        if (this.HasBerserk && defendingCreatureWillDie && attackerWillSurvive) {
 
-            Debug.Log("Has Berserk!");
             this.Health -= defendingCreature.Attack;
             defendingCreature.Health -= this.Attack;
             return;

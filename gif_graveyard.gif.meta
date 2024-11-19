@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      gif_graveyard_0: -1547933155556012934
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
